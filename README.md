@@ -9,6 +9,8 @@ I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av
 - bulletpoint
 - bulletpoint
 
+Vi fokuserer primært på Angular og TypeScript. Likevel er det mange andre ting som må være på plass for å få en moderne web-app til å fungere. Det er mange "buzzwords" (node, webpack, transpilering, sass, ++) å lære seg, men vi dekker ikke disse i denne workshopen. Hvis man likevel skulle være nysgjerrig kan man ta en titt på [vårt oppsett av Webpack](https://angular.io/docs/ts/latest/guide/webpack.html).
+
 ### Ferdig løsning
 LINK TIL FERDIG LØSNING ...
 
