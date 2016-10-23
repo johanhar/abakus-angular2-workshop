@@ -1,34 +1,56 @@
-# JavaZone 2016
-## TypeScript og Angular2 workshop
+# Angular 2 Workshop for Abakus
+### 26.okt.2016 hos Kantega
 
-I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av bøker.
+## Mål for workshopen
+
+I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av bøker. Du kommer til å lære om:
+
+- bulletpoint
+- bulletpoint
+- bulletpoint
+
+### Ferdig løsning
+LINK TIL FERDIG LØSNING ...
 
 ## Før du begynner
- - `git clone git@github.com:johanhar/javazone2016-angular2-workshop.git`
- - `npm install`
- 
-[Her kan du installere Node](https://nodejs.org/en/download/)
-
+### Sørg for at du har Git installert
 [Her kan du installere Git](https://git-scm.com/downloads)
 
-[Ferdig løsning ser slik ut](https://jz2016-ng2-ws.herokuapp.com)
+### Sørg for at du har Node.js og NPM installert
+[Her kan du installere Node](https://nodejs.org/en/download/)
+
+### Lag en klone av repository
+Åpne en terminal og naviger til den stien der du ønsker å legge prosjektet. Kopier så inn følgende kommando: 
+```
+git clone git@github.com:johanhar/abakus-angular2-workshop.git
+```
+
+### Installer avhengigheter
+I samme terminalvindu (og under samme sti) som du la prosjektet kan du kopiere inn følgende kommando for å installere avhengigheter som appen vår trenger:
+
+```
+npm install
+```
+
+### Slå av automatisk transpilering
+Hvis din IDE spør om du ønsker å ha automatisk transpilering av TypeScript til JavaScript hver gang du lagrer en fil, så si "Nei, takk" til denne funksjonen. Spør oss gjerne om hjelp hvis du trenger å få dette slått av men ikke finner instillingen. Dette gjelder særlig WebStorm og IDEA.
 
 ## Verktøy/IDE
 Du kan bruke den IDE eller editor som du selv ønsker.
 Vi anbefaler en IDE/editor som har god støtte/plugins for TypeScript.
 
- * [WebStorm/IDEA](https://www.jetbrains.com/idea/) (koster penger for å få TypeScript-støtte / 30 dager trial)
- * [Visual Studio Code](https://code.visualstudio.com) (gratis)
-
+* [WebStorm/IDEA](https://www.jetbrains.com/idea/) (koster penger for å få TypeScript-støtte / 30 dager trial)
+* [Visual Studio Code](https://code.visualstudio.com) (gratis)
 
 ## Oppgave 1 - Component
 
 Vi kjenner alle til innebygde HTML elementer som `<select>` og `<form>`. Med Angular har du mulighet til å lage dine egne elementer med Component. I korte trekk er en Angular-app et tre av Components.
 
 ### Definisjonen på en Component
-Man kan si at en Component består av to deler:
- 1. Metadata (Component annotation)
- 2. Klasse (Component definition class)
+Man kan si at en Component består av tre deler:
+ 1. Decorator
+ 2. Et View
+ 3. En Controller
 
 Her er et eksempel på en enkel Component:
 ```javascript
@@ -41,7 +63,7 @@ import { Component } from '@angular/core';
 export class HelloWorld {}
 ```
 
-Denne Component vil man kunne bruke i en HTML-fil slik:
+Denne komponenten vil man kunne bruke i en HTML-fil slik:
 ```html
 <body>
   <hello-world></hello-world>
@@ -56,10 +78,19 @@ Angular vil ta innholdet fra `template` og plassere det i `<hello-world>` slik a
 </body>
 ```
 
-#### Metadata/annotation
-Vi binder metadata til Component sin klasse med bruk av annotation `@Component`. Selve metadataen kommer i form av JSON.
+#### Decorator
+Med såkalte annotations binder vi metadata til komponenten. En annotation starter med `@` tegnet. For å lage en decorator for komponenter bruker vi annotasjonen `@Component` .
 
-I eksempelet ovenfor har vi valgt å putte HTML direkte i annotation, men vi kan velge å plassere HTML i en egen fil:
+Selve metadataen kommer i form av JSON. Vi kan si at vi konfigurer vår Component gjennom en decorator.
+
+I eksempelet ovenfor konfigurer vi to ting for vår komponent:
+1. selector
+2. template
+
+#### View
+Også kalt Template, det er her vi legger vår HTML. 
+
+Vi valgte å putte HTML direkte i vår metadata, men vi kan velge å plassere HTML i en egen fil:
 
 ```javascript
 @Component({
@@ -68,10 +99,10 @@ I eksempelet ovenfor har vi valgt å putte HTML direkte i annotation, men vi kan
 })
 ```
 
-Her har vi valgt å definere Component sitt view (HTML) i en egen fil med navnet hello-world.html.
+Her har vi valgt å definere Component sitt view (template) i en egen fil med navnet hello-world.html...
 
-#### Klasse
-Selve logikken til en Component legger vi i klassen. Her kan vi ha variabler og funksjoner som blir tilgjengelige for view/template. Dette gjør at appen vår blir interaktiv for brukeren. Det som for eksempel skal skje når brukeren trykker på en knapp i Component sitt view kan man legge i klassen. Mer om dette senere.
+#### Controller
+Selve logikken til en Component legger vi i klassen, kalt kontrolleren. Her kan vi ha variabler og funksjoner som blir tilgjengelige for vårt View (template). Dette gjør at appen vår blir interaktiv for brukeren. Det som for eksempel skal skje når brukeren trykker på en knapp i Component sitt View kan man legge i klassen. Mer om dette senere.
 
 ### Gå riktig branch før du starter oppgaven
 Du står sannsynligvis i `master` branchen til prosjektet nå, 
@@ -301,10 +332,10 @@ Før vi lager selve rutene oppretter vi noen foreløpig tomme komponenter.
 Legg merke til at vi her velger å legge hver komponent i en egen mappe under rot komponenten.
 
 Foreløpig har vi bare én TypeScript fil i hver komponent-mappe, senere når appen vokser kan det fort hende at man ønsker å ha mer:
- - et spec (for enhetstester tilknyttet komponenten)
- - stilsett/css tilknyttet komponenten
- - template/html i egen fil (istedenfor å definere templaten direkte i annotation)
- - flere (under)komponenter
+- et spec (for enhetstester tilknyttet komponenten)
+- stilsett/css tilknyttet komponenten
+- template/html i egen fil (istedenfor å definere templaten direkte i annotation)
+- flere (under)komponenter
 
 **Dette er bare et eksempel som ikke nødvendigvis har noe fasitsvar.** 
 ```
@@ -609,13 +640,13 @@ class Book {
         this.description = description;
     }
 }
-``` 
+```
 
 Det er kanskje enklere å forstå, mange vil foretrekke denne versjonen.
 
 Det mest vanlige med TypeScript å bruke vårt første eksempel:
- * hver property blir definert i constructor, de trengs ikke å defineres på forhånd
- * hver property vil bli assigned automatisk, vi trenger ikke å gjøre det selv med `this.property = argument`
+* hver property blir definert i constructor, de trengs ikke å defineres på forhånd
+* hver property vil bli assigned automatisk, vi trenger ikke å gjøre det selv med `this.property = argument`
 
 **NB:** For at de to punktene ovenfor skal bli oppfyllt må argumentet være `public`.
 
@@ -807,7 +838,7 @@ Nå har vi sett på input. Hvordan kan en komponent sende output til sin parent 
 Syntaksen for at en parent (foreldre-komponent) kan ta imot output er slik:
 ```html
 <products-list (onProductSelected)="productWasSelected($event)">
-``` 
+```
 
 Metoden `productWasSelected` er noe vi må definere selv, en metode vi ønsker å binde i vår komponent med `onProductSelected` sitt output.
 
@@ -1230,7 +1261,7 @@ La merke hvordan man viderefører *payload* fra event til metode-kall ved å bru
 **Endre koden etter instruksjoner i filen: src/book-app/books/books.component.ts**
 
 Da kan du søke bøker og se resultater i bok-lista med en gang vi har noenting å vise!
- 
+
 Dette var også siste oppgave, og din applikasjonen er ferdig nå.
 
 **Takk for deltagelse!!**
