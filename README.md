@@ -44,7 +44,7 @@ Vi anbefaler en IDE/editor som har god støtte/plugins for TypeScript.
 * [WebStorm/IDEA](https://www.jetbrains.com/idea/) (koster penger for å få TypeScript-støtte / 30 dager trial)
 * [Visual Studio Code](https://code.visualstudio.com) (gratis)
 
-## Oppgave 1 - Component
+## Oppgave 1 - Vår første Component
 
 Vi kjenner alle til innebygde HTML elementer som `<select>` og `<form>`. Med Angular har du mulighet til å lage dine egne elementer med Component. I korte trekk er en Angular-app et tre av Components.
 
@@ -209,45 +209,13 @@ npm start
 
 Gå så til [http://localhost:8080](http://localhost:8080).
 
-## Oppgave 1.2 - Navigasjonsbar
+Vi har satt det opp for deg slik at hvis du nå endrer templaten til `BookApp` så vil nettleseren din automatisk refreshes etter du har lagret (etter noen få sekunder).
+
+## Oppgave 2 - Navigasjonsbar
 La oss fortsette med å lage en enkel komponent for navigasjon. Hensikten med denne oppgaven er å vise hvordan en komponent kan bygges opp av andre komponenter. 
 
-#### Directive
-Hvis du kommer fra Angular 1 har du sikkert hørt om Directive. 
-Angular 2 bruker fortsatt begrepet direktiv, det er nemlig sånn at Component er en subtype av Directive. 
-Det finnes tre typer direktiv, hvor Component er en av typene. "Structural directives" og "Attribute directives" er de to andre.
-Du kan lese mer om dette [her](https://angular.io/docs/ts/latest/guide/architecture.html#!#directives).
-
-Før man kan bruke andre direktiver og komponenter må man fortelle Angular om dette. Dette kan gjøres i metadata/annotation til komponenten.
-
-Nedenfor ser du et eksempel på slik kode:
-```javascript
-// Dette er bare eksempel og ikke en del av oppgaven
-@Component({
-  selector: 'product-row',
-  directives: [ProductImage, ProductDepartment, PriceDisplay],
-  template: `
-  <div class="content">
-    <div class="header">{{ product.name }}</div>
-    <div class="meta">
-      <div class="product-sku">SKU #{{ product.sku }}</div>
-    </div>
-    <div class="description">
-      <product-department [product]="product"></product-department>
-    </div>
-  </div>
-  <price-display [price]="product.price"></price-display>
-  `
-})
-class ProductRow {
-  product: Product;
-}
-```
-
-Her kan man se en komponent kalt `ProductRow` som er bygget opp av flere mindre komponenter. Hvis vi ser i viewet/templaten finner vi tags som `<product-department>` og `<price-display>`. For at disse taggene skal vises må man liste opp hver tilhørende komponent i attributten `directives` til `@Component`.
-
-### Opprett en ny fil for navbar komponenten
-**/src/book-app/navbar.component.ts**
+### 2.1 Opprett en ny fil for navbar komponenten
+**Opprett filen /src/book-app/navbar.component.ts**
 ```javascript
 import { Component } from '@angular/core';
 
@@ -267,14 +235,12 @@ import { Component } from '@angular/core';
 export class Navbar {}
 ```
 
-### Editer rot-komponenten
-**/src/book-app/book-app.component.ts**
+### 2.2 Ta i bruk vår nye komponent fra rot-komponenten
+**Editer /src/book-app/book-app.component.ts**
 ```javascript
 import { Component } from '@angular/core';
-import { Navbar } from './navbar.component';
 
 @Component({
-    'directives': [Navbar],
     'selector': 'book-app',
     'template': `
         <div class="main-container">
@@ -290,7 +256,41 @@ import { Navbar } from './navbar.component';
 export class BookApp {}
 ```
 
-Du trenger ikke å kjøre `npm start` om igjen, [http://localhost:8080](http://localhost:8080) oppdateres automatisk ved endringer.
+### 2.3 Deklarer vår nye komponent i modulen
+Legg merke til at vi har elementet `<navbar>` i vår template fra oppgave 2.2. Det vil ikke fungere å ta i bruk nye elementer (selectors) uten at én av følgende stemmer:
+
+1. Modulen vår importerer den modulen som igjen deklarer komponenten (selectoren) vi ønsker å bruke
+2. Komponenten (selectoren) vi ønsker å bruke ligger i samme modul
+
+**Editer /src/book-app/book-app.module.ts**
+
+```javascript
+import { NgModule } from '@angular/core';
+import { BrowserModule }  from '@angular/platform-browser';
+
+import { BookApp } from './book-app.component';
+import { Navbar } from './navbar.component';
+
+@NgModule({
+    imports: [
+        BrowserModule
+    ],
+    declarations: [
+        BookApp,
+        Navbar
+    ],
+    bootstrap: [
+        BookApp
+    ]
+})
+export class BookAppModule {}
+```
+
+
+
+Nå deklareres både `BookApp` og `Navbar` av `BookAppModule`, som gjør at elementet `<navbar>` kan brukes i `BookApp` sin template.
+
+Nå kan du ta en titt i nettleseren etter alle endringer er lagret. Du trenger ikke å kjøre `npm start` om igjen, [http://localhost:8080](http://localhost:8080) oppdateres automatisk ved endringer.
 
 ## Oppgave 2 - Routing
 Du har kanskje hørt uttrykket "Single Page Application". Angular sin router gjør det mulig å endre nettleseren sin URL uten at man gjør et nytt page load, og bytte ut deler av siden med andre komponenter for bestemte ruter.
