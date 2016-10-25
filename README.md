@@ -107,12 +107,13 @@ Her har vi valgt å definere Component sitt view (template) i en egen fil med na
 Selve logikken til en Component legger vi i klassen, kalt kontrolleren. Her kan vi ha variabler og funksjoner som blir tilgjengelige for vårt View (template). Dette gjør at appen vår blir interaktiv for brukeren. Det som for eksempel skal skje når brukeren trykker på en knapp i Component sitt View kan man legge i klassen. Mer om dette senere.
 
 ### 1.1 Gå riktig branch før du starter oppgaven
-Du står sannsynligvis i `master` branchen til prosjektet nå, 
-før du setter i gang med oppgave 1 så må du hoppe over til en egen branch som gir deg riktig utgangspunkt for å sette i gang med oppgavene.
+Du står sannsynligvis i `master` branchen til prosjektet nå, det kan du sjekke med å skrive `git status`. Før du setter i gang med oppgave 1 så må du hoppe over til en egen branch som gir deg riktig utgangspunkt for å sette i gang med oppgavene.
+
+
 Åpne en terminal og gå til roten av prosjektmappen.
 
 ```
-git checkout -f oppgave1-2
+git checkout -f start
 ```
 Det er viktig at du bruker **-f opsjonen** i kommandoen!
 
@@ -574,11 +575,7 @@ Det finnes en ferdig CSS-klasse som heter "nav__link--active"
 
 ## Oppgave 4 - Template bindings
 
-### Gå riktig branch før du starter oppgaven
-```
-git checkout -f oppgave3
-```
-Det er viktig at du bruker **-f opsjonen** i kommandoen!
+Så hvordan kan vi gjøre appen vår litt mer "dynamisk" og interaktiv?
 
 Ta en titt på følgende eksempel:
 
@@ -604,7 +601,7 @@ Koden du finner på innsiden av **{{...}}** er en expression, det betyr at man k
 ```
 
 La oss teste dette med et enkelt eksempel i vår egen app..
-### Vis antall bøker i About komponenten
+### 4.1 - Vis antall bøker i About komponenten
 **Endre koden i filen: /src/book-app/about/about.component.ts**
 ```javascript
 import { Component } from '@angular/core';
@@ -627,9 +624,9 @@ Du kan nå navigere i appen til "About" og se endringene.
 For de som har jobbet med Angular 1 så legger man kanskje merke til at `$scope` er borte.
 Alle funksjoner og variabler i klassen `About` vil være synlige for templaten.
 
-## Oppgave 3.1 - NgFor
-La oss ta i bruk template binding i sammenheng med en for-løkke. 
-For hver bok i biblioteket ønsker vi å vise en rad i en tabell.
+### 4.2 - Lag en liste av bøker med NgFor
+#### NgFor
+Videre skal vi vise data med bruk av en for-løkke, her kommer litt teori om `NgFor`.
 
 Angular har et innebygd direktiv for å lage for-løkker, det heter `NgFor`.
 Syktaksen er litt spesiell, men er enkel å forstå når man først skjønner tanken bak.
@@ -649,12 +646,10 @@ Et godt eksempel er `*ngIf`:
 </p>
 ```
 
-Vi kan lage våre egne direktiv som viser eller skjuler deler av vårt view basert på en tilstand eller data,
-og disse vil da brukes stjerne-syntaksen. Men dette skal vi ikke gjøre i denne workshopen, vi fokusere kun på innebygde direktiv for nå.
+Vi kan lage våre egne direktiv som viser eller skjuler deler av vårt view basert på en tilstand eller data, og disse vil da bruke stjerne-syntaksen. Men dette skal vi ikke gjøre i denne workshopen, vi fokusere kun på innebygde direktiv for nå.
 
 La oss teste NgFor i vår egen app.
 
-### Lag en liste av bøker
 **Legg til koden i filen: /src/book-app/books/books.component.ts**
 ```javascript
 import { Component } from '@angular/core';
@@ -675,10 +670,9 @@ export class Books {
 
 Ta en titt under http://localhost:8080/#/books så har vi nå ganske enkelt laget en liste av bøker med `*ngFor`.
 
-## Oppgave 3.2 - En egen klasse for Bok
+### 4.3 - En egen klasse for Bok
 Istedenfor å bruke et array av strings, så kan vi lage en klasse i TypeScript som representerer en bok.
 
-### Opprett en Book model
 **Opprett en fil: /src/book-app/books/book.model.ts**
 ```javascript
 export class Book {
@@ -728,13 +722,12 @@ Det mest vanlige med TypeScript å bruke vårt første eksempel:
 
 **NB:** For at de to punktene ovenfor skal bli oppfyllt må argumentet være `public`.
 
-## Oppgave 3.3 - En tabell av bøker
-La oss fortsette med listen av bøker med å bruke en `<table>` istedenfor `<ul>`. 
+### 4.4 - En tabell av bøker
+La oss gjøre om listen av bøker med å bruke en `<table>` istedenfor `<ul>`. 
 For hver rad i tabellen ønsker vi å ha en egen komponent.
 Til å starte med er hver rad lik, den samme hardkodet boken.
 Senere vil vi kunne utvide med data fra en server.
 
-### Opprett en egen komponent til hver rad
 **Opprett en fil: /src/book-app/books/book-row.component.ts**
 ```javascript
 import { Component } from '@angular/core';
@@ -753,15 +746,18 @@ export class BookRow {
 }
 ```
 
-### Ta i bruk den nye komponenten i tabellen
+Akkurat nå er det ikke vits å se etter endringer i nettleseren, vi har ikke tatt i bruk den nye komponenten enda.
+
+### 4.5 - Deklarer den nye komponenten i BookAppModule
+Åpne `src/book-app/book-app.module.ts` og deklarer den nye komponenten vi nettopp lagde.
+
+### 4.6 - Ta i bruk den nye komponenten i tabellen
 **Rediger: /src/book-app/books/books.component.ts**
 ```javascript
 import { Component } from '@angular/core';
-import { BookRow } from './book-row.component';
 
 @Component({
     'selector': 'books',
-    'directives': [BookRow],
     'template': `
         <table>
             <thead>
@@ -786,9 +782,8 @@ export class Books {}
 
 Ta en titt i nettleseren din nå, listen du hadde av bøker er byttet ut med en tabell som er bygget opp av flere `<book-row>`.
 
-Syntaksen i BookRow sin selector er litt annerledes.
-Vi sier at man skal kun bruke komponenten som en attributt på et html element, og det må være en `<tr>`.
-Dette gjør vi for å slippe at Angular rendrer følgende:
+Syntaksen i `BookRow` sin selector er litt annerledes. Vi sier at man skal kun bruke komponenten som en attributt på et html element, og det må være en `<tr>`. Dette gjør vi for å slippe at Angular rendrer følgende:
+
 ```html
 <tbody>
     <book-row> <!-- Ikke gyldig html i tbody, browseren vil ikke vise dette. -->
@@ -808,7 +803,7 @@ men heller ... :
 </tbody>
 ```
 
-## Oppgave 3.4 - Input
+## Oppgave 5 - Input
 Akkurat nå er alle bøker like... 
 Hvordan kan vi gi en liste av BookRow hver sin Book model?
 

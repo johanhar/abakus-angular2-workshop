@@ -6,6 +6,7 @@ import { Navbar } from './navbar.component';
 import { About } from './about/about.component';
 import { Books } from './books/books.component';
 import { Contact } from './contact/contact.component';
+import { BookRow } from './books/book-row.component';
 
 import {
     RouterModule,
@@ -42,7 +43,8 @@ const routes: Routes = [
         Navbar,
         About,
         Books,
-        Contact
+        Contact,
+        BookRow
     ],
     bootstrap: [
         BookApp
