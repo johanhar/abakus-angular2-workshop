@@ -720,8 +720,6 @@ Det mest vanlige med TypeScript å bruke vårt første eksempel:
 * hver property blir definert i constructor, de trengs ikke å defineres på forhånd
 * hver property vil bli assigned automatisk, vi trenger ikke å gjøre det selv med `this.property = argument`
 
-**NB:** For at de to punktene ovenfor skal bli oppfyllt må argumentet være `public`.
-
 ### 4.4 - En tabell av bøker
 La oss gjøre om listen av bøker med å bruke en `<table>` istedenfor `<ul>`. 
 For hver rad i tabellen ønsker vi å ha en egen komponent.
@@ -910,7 +908,7 @@ Syntaksen for at en parent (foreldre-komponent) kan ta imot output er slik:
 <products-list (onProductSelected)="productWasSelected($event)">
 ```
 
-Metoden `productWasSelected` er noe vi må definere selv, en metode vi ønsker å binde i vår komponent med `onProductSelected` sitt output.
+Metoden `productWasSelected` er noe vi må definere selv, en metode vi ønsker å binde i vår komponent med `onProductSelected` sitt output. Altså når komponent X bruker `<products-list>` så må X lage metoden vi binder til `(onProductSelected)`.
 
 For at ProductsList skal kunne sende fra seg outputs må den si fra om dette med annotation `@Output`:
 ```javascript
@@ -919,10 +917,8 @@ class ProductsList {
 }
 ```
 
-### Gjør hver rad klikkbar
-Vi skal ikke se nærmere på `EventEmitter` og `@Output` med det første.
-Dette har bare vært en kort innføring for nå.
-Til å begynne med bruker vi Angular sitt innebygde direktiv Click.
+### 6.1 - Gjør hver rad klikkbar
+Vi skal ikke se nærmere på `EventEmitter` og `@Output` med det første. Dette har bare vært en kort innføring for nå. Til å begynne med bruker vi Angular sitt innebygde direktiv `Click`.
 
 **Endre filen: /src/book-app/books/books.component.ts**
 Endre koden i template:
@@ -936,402 +932,70 @@ bookSelected(book: Book) {
 }
 ```
 
-Consolen din skal nå printe ut boken du klikker på.
+Consolen i nettleseren din skal nå printe ut boken du klikker på.
 
-Før vi navigerer videre fra tabellen til et eget view med mer detaljer for boken må vi ta en innføring i DI (Dependency Injection).
-Vi må nemlig ha tak i `Router` i vår komponent slik at vi kan gjøre noe lignende:
+Før vi navigerer videre fra tabellen til et eget view med mer detaljer for boken må vi ta en innføring i DI (Dependency Injection). Vi må nemlig ha tak i `Router` i vår komponent slik at vi kan gjøre noe lignende:
 ```javascript
 bookSelected(book: Book) {
     this.router.navigate(['/books', book.id]);
 }
 ```
-Mer om dette senere.
 
-## Oppgave 4 - Forms
+## Oppgave 7 - Dependency Injection
+Ulike deler av vår app vil måtte kommunisere med hverandre. Hvordan gjør vi dette i Angular?
 
-### Skift til riktig branch
-```
-git checkout -f oppgave4
-```
-Det er viktig at du bruker **-f opsjonen** i kommandoen!
-
-### Lag et kontakt oss skjema
-**Endre koden i filen: /src/book-app/contact/contact.component.ts**
-```html
-import { Component } from '@angular/core';
-
-@Component({
-    'selector': 'contact',
-    'template': `
-        <form>
-            <input type="text" name="name" placeholder="Name *">
-            <input type="email" name="email" placeholder="Email">
-            <textarea placeholder="Message *" name="message"></textarea>
-            <button type="submit">Contact us</button>
-        </form>
-    `
-})
-export class Contact {}
-```
-
-Dette er utgangspunktet for skjemaet som vi skal bygge videre på.
-Ta en titt i nettleseren at alt ser greit ut så langt..
-
-## Oppgave 4.1 - FormControl og FormGroup
-En FormControl representerer et felt i et skjema.
-En FormGroup er en samling av én eller flere FormControl.
-
-Skjemaet vi har startet på har tre felter, vi vil altså trenge tre FormControl og én FormGroup i vår komponent sin klasse.
-Vi kommer altså til å binde hvert `<input>` og `<textarea>` til en FormControl i klassen, samt binde `<form>` til en FormGroup.
-
-### Bind <input> til hver sin FormControl
-Nedenfor ser du koden for å knytte sammen et `<input>` til en FormControl fra klassen/komponenten.
-Her er da `contactForm` en property vi ikke enda har skrevet (det gjør vi snart), som igjen har et sett av FormControls. 
-
-**Endre koden i filen: /src/book-app/contact/contact.component.ts**
-```html
-<input type="text" 
-    name="name" 
-    placeholder="Name *"
-    [formControl]="contactForm.controls['name']">
-```
-Gjør det samme for epost og meldingsfeltet.
-
-### Bind skjema til FormGroup
-**Endre koden i filen: /src/book-app/contact/contact.component.ts**
-```html
-<form [formGroup]="contactForm" (ngSubmit)="onSubmit(contactForm.value)">
-```
-
-Vi skal snart sette opp `contactForm` og metoden `onSubmit(value: string)` i klassen.
-
-## Oppgave 4.2 - FormBuilder
-Koden du har skrevet til nå kjører ikke særlig bra, vi trenger å sette ting sammen i klassen.
-
-### Importer nødvendige direktiv
-Før du kan sette i gang å bruke forms i Angular trenger komponenten din en rekke komponenter og direktiv.
-
-**Endre koden i filen: /src/book-app/contact/contact.component.ts**
+La oss si at vi har en klasse som er avhengig av to andre klasser:
 ```javascript
-...
-import {
-  FORM_DIRECTIVES,
-  REACTIVE_FORM_DIRECTIVES,
-  FormBuilder,
-  FormGroup
-} from '@angular/forms';
+import { LogService } from 'log-service';
+import { HttpService } from 'http-service';
+import { User } from 'user';
 
-@Component({
-    'selector': 'contact',
-    'directives': [FORM_DIRECTIVES, REACTIVE_FORM_DIRECTIVES],
-...
-```
-
-Det er fortsatt litt arbeid som skal til før vi kan kjøre appen uten feil, fortsett med oppgavene under.
-
-### Ta i bruk FormBuilder for å lage FormGroup
-La oss se nærmere på det som må gjøres i klassen, nå som vi har gjort ferdig view biten.
-Det første vi må gjøre er å lage vår FormGroup med FormBuilder.
-
-**/src/book-app/contact/contact.component.ts**
-```javascript
-export class Contact {
-    contactForm: FormGroup;
-
-    constructor(formBuilder: FormBuilder) {
-        this.contactForm = formBuilder.group({
-            'email': [''],
-            'name': [''],
-            'message': ['']
-        })
-    }
-
-    onSubmit(value: string): void {
-        console.log('you submitted value: ', value);
-    }
+class LoginService {
+  constructor() {
+    LogService.info("LoginService constructed");
+  }
+  
+  loginUser(user: User) {
+    LogService.info("I'm now going to login by id: " + user.id)
+    let http = new HttpService();
+    http.doLogin(user)
+    ... etc
+  }
 }
 ```
 
-Nå burde du kunne se at det logges i console ved submit.
+Hadde det ikke vært mye bedre om `LoginService` fikk sine avhengigheter ved initialisering? Da blir det jo også mye enklere å mocke denne klassen hvis man skulle ha behov for det i forbindelse enhetstesting. Da kan man også se med en gang alt det `LoginService` noen gang vil komme til å bruke av andre klasser, man slipper å lese seg gjennom hele klassen for å danne et bilde om hvordan klassene avhenger av hverandre.
 
-Hvor kommer FormBuilder fra? Dette forklarer vi nærmere senere når vi går gjennom Dependency Injection.
-Prøv å submit skjema og se hva som blir logget i consolen.
-
-## Opgpave 4.3 - Feedback ved submit
-Det er kanskje litt kjedelig å bare logge til console, la oss prøve å gjøre appen litt mer "ekte" med å gi en tilbakemelding ved submit.
-
-### Legg til følgende kode i Contact komponenten
-**/src/book-app/contact/contact.component.ts**
 ```javascript
-//
-// Dette er ikke hele filen, bare det som du skal legge inn ekstra på riktige steder
-// Du skal ikke fjerne/erstatte eksisterende kode
-//
-@Component({
-    'template': `
-        <p class="center" *ngIf="submitted">Thank you for contacting us!</p>
-    `
-})
-export class Contact {
-    contactForm: FormGroup;
-    submitted: boolean = false;
+import { LogService } from 'log-service';
+import { HttpService } from 'http-service';
+import { User } from 'user';
 
-    onSubmit(value: string): void {
-        console.log('you submitted value: ', value);
-        this.contactForm.reset();
-        this.submitted = true;
-
-        setTimeout(() => {
-            this.submitted = false;
-        }, 2000);
-    }
+class LoginService {
+  constructor(public logService: LogService, public httpService: HttpService) {
+    this.logService.info("LoginService constructed");
+  }
+  
+  loginUser(user: User) {
+    this.logService.info("I'm now going to login by id: " + user.id);
+    this.httpService.doLogin(user);
+    ... etc
+  }
 }
 ```
 
-Som vi har snakket om før så vil `<p *ngIf="submitted">` sitt innhold vises/skjules når `submitted` endres.
-Angular tar seg av endringer i viewet, man trenger bare å endre `submitted` og så vil resten skje automatisk.
+Forskjellen er stor men enkel. Det er systemet (Angular) som tar seg av initialisering. `LogService` trenger bare å si hva han trenger, og så vil han få ferdig initialiserte instanser, klare for bruk. Dette gjør det enklere å vedlikeholde store kodebaser, blant annet.
 
-## Oppgave 4.4 - Validering
-Som du kan se har vi prøvd å merke navn og melding som obligatorisk med å bruke stjerne, 
-en typisk måte å si til brukeren at dette feltet må være med (`placeholder="Name *"`).
-Vi har også et felt for epost, som nå valideres av nettleseren din (HTML5).
+### 7.1 - Inject Router i Books
+På JavaZone 2016 kjørte vi denne workshopen og gikk mer i dybden rundt DI. Nå har vi begrenset med tid og må droppe den delen hvor vi lærer deg hvordan en komponent eller service i Angular kan registrere seg til DI-systemet slik at andre komponenter kan få den injected.
 
-### Slå av HTML5 validering
-Ofte ønsker vi kontrollen på feilmeldinger selv, så la oss starte med å slå av HTML5 validering.
+Det eneste du trenger å vite nå for å gå videre er at vi har allerede sagt til DI-systemet at vi vil kunne være avhengig av `Router` i modulen  `RouterModule`.
 
-**Rediger: /src/book-app/contact/contact.component.ts**
-```html
-<form [formGroup]="contactForm" 
-    (ngSubmit)="onSubmit(contactForm.value)" 
-    novalidate>
+Så når vi da krever et argument av typen `Router` i constructor til en komponent deklarert i `BookAppModule` - så vil Angular automatisk sørge for å gi den komponenten en ferdig initialisert `Router`, klar for bruk.
 
-<input type="email" 
-    name="email" 
-    placeholder="Email"
-    [formControl]="contactForm.controls['email']" 
-    novalidate>
-```
-
-### Legg til feilmeldinger
-Det er mange måter å vise feilmeldinger på, 
-vi gjør det enkelt (og ikke nødvendigvis penest og best) med å vise alle type feil i bunnen av skjema i en samlet `<div>`.
-
-**Rediger: /src/book-app/contact/contact.component.ts**
-```html
-<div class="center">
-    <p *ngIf="!contactForm.controls['name'].valid && contactForm.controls['name'].touched">Name is required</p>
-    <p *ngIf="!contactForm.controls['email'].valid && contactForm.controls['email'].touched">Email is invalid</p>
-    <p *ngIf="!contactForm.controls['message'].valid && contactForm.controls['message'].touched">Message is required</p>
-</div>
-```
-
-### Legg på validering
-For at validering skal fungere må vi si til hver enkelt FormControl hva slags validering som gjelder for den.
-
-**Rediger: /src/book-app/contact/contact.component.ts**
+**Rediger filen: src/book-app/books/books.component.ts**
 ```javascript
-import {
-  FORM_DIRECTIVES,
-  REACTIVE_FORM_DIRECTIVES,
-  FormBuilder,
-  FormGroup,
-  Validators // må også importeres når vi skal bruke validering 
-} from '@angular/forms';
-
-// Legg til validering for hvert felt
-constructor(formBuilder: FormBuilder) {
-    this.contactForm = formBuilder.group({
-        'email': ['', Validators.pattern('^[^ ]+@[^ ]+\\.[^ ]+$')],
-        'name': ['', Validators.required],
-        'message': ['', Validators.required]
-    })
-}
-```
-
-### Gjør submit-knappen disabled når formen er ugyldig
-Angular har et innebygd direktiv for å gjøre felter og knapper disabled. 
-
-**Editer: /src/book-app/contact/contact.component.ts**
-```html
-<button type="submit" [disabled]="!contactForm.valid">Contact us</button>
-```
-
-Nå kan du prøve å sende formen og se om valideringen virkelig fungerer!
-
-Dette er helt enkel validering.
-Det er mye mer man kan gjøre med forms og validering, 
-men for nå i denne workshopen ser vi oss ferdige og går videre til andre oppgaver.
-
-## Oppgave 5 Services og DI (dependency injection)
-
-### Skift til riktig branch
-```
-git checkout -f oppgave5-7
-```
-
-For å hente data til bøker, skal vi lage en service som komponenter
-kan utnytte for å søke etter bøker. Vi må også fortelle til Angular at 
-vår service er tilgjengelig for *dependency injection*, slik at komponenter
-som vil ha servicen kan få tak i den.
-
-## 5.1 Lage en service
-Servicen vår mangler noen funksjonalitet som du må oppfylle.
-
-**Se på filen *src/book-app/services/book.service.ts* og følg instruksjoner der.**
-
-## 5.2 Gjør servicen tilgjengelig for DI
-For at en komponent skal bli tilgjengelig for DI må du annotere den
-med @Injectable() Husk å bruke parenteser, ellers får du mange rare feilmeldinger! 
-
-**Legg til annotasjonen i filen: src/book-app/services/book.service.ts**
-
-De komponentene som skal bruke vår @Injectable() service-klasse må:
-* sette 'providers' i en @Component-annotasjonen 
-* legge til parametre i constructor som skal injectes
-
-F.eks. 
-```javascript
-@Component({
-    'selector': 'about',
-    'providers': [MyService]
-    ....
-})
-class MyComponent {
-    
-    constructor(private myService: MyService) {
-    }
-    ....
-}
 
 ```
-**Legg til providers og constructor i src/book-app/books/books.component.ts** 
 
-Hva er *provider* da ?
-Provider er en klasse som vet hvordan man lager instanser av klasser
-som skal bli injected. Provider kan være f.eks. være en factory-klasse, men 
-som vanlig er den en klasse som skal bli injected selv. Altså i vår tilfelle BookService-klasse.
-
-**Ta i bruk bookService i src/book-app/books/books.component.ts**
-Linjen 
-```javascript
-// this.books = this.bookService.getAll();
-```
-er kommentert ut. Ta den i bruk.
-
-Da kan du se en liste av bøker når du går til [http://localhost:8080](http://localhost:8080)!
-
-## 5.3 En detaljert visning av hver bok
-Nå som vi har sett litt på Dependency Injection så kan vi fortsette med listen av bøker.
-
-### Naviger til en detaljert visning av valgt bok
-Når brukeren trykker på en bok i tabellen av bøker, så skjer det ingenting akkurat nå, vi bare logger noe til console.
-For at brukeren kan navigere til detaljert visning av en bok,
-må du først injisere Router-service i constructor:
-
-**Endre koden i src/book-app/books/books.component.ts**
-```javascript
-    constructor(private bookService: BookService, private router: Router) {
-    }
-```
-La merke at vi trenger **ikke** å endre 'providers' i komponenten,
-siden Angular tilbyr denne servicen automatisk til den scopen hvor vår komponent er.
-Navigering til detaljer visning er ikke ferdig ennå.
-
-**Endre koden i metoden bookSelected src/book-app/books/books.component.ts**
-
-```javascript
-this.router.navigate(['/books', book.id]);
-```
-
-Da kan du teste å navigere videre fra bok-listen!
-
-
-## Oppgave 6 Lifecycle hooks
-
-Angular har ansvaret for å håndtere dine komponenter og dette kommer med diverse hendelser.
-Hver komponent som vi lager i Angular har en så kalt *lifecycle*.
-Slike hendelser som inngår i komponenten sin lifecycle er oppretting av komponent, oppdatering og sletting.
-
-Ved å implementer spesielle *interfaces* som Angular
-tilbyr, kan vi knytte vår egen funksjonalitet til disse hendelser. 
-
-De mest vanlige interfaces er:
-* OnInit
-* OnDestroy
-* OnChanges
-
-For eksempel:
-```javascript
-class MyComponent implements OnInit { 
-    ngOnInit() { 
-        console.log('ngOnInit - initializing component.'); 
-    }
-}
-```
-
-### Vis antall bøker på About siden
-Ved hjelp av BookService-klassen skal du vise antall bøker i bibliotek.
-Her må du bruke OnInit-interfacet.  Vi kunne selvsagt også bare kalle servicen i en constructor til klasse, men det er trygger og bedre å la constructoren bare initialisere attributer til klassen, og gjøre ting som krever mer jobb i ngOnInit-metoden.
-
-**Endre koden etter instruksjoner i filen: src/book-app/about/about.component.ts**
-
-Da kan du teste at antall bøker er riktig i 'about'-seksjonen.
-
-## Oppgave 7 Binding til events
-
-Vanlig Angular-applikasjon er et tree av komponenter, hvor data flyter nedover i tree 
-oftest via property-binding ved hjelp av @Input-annotering. Når man har behov å 
-passe data oppover i komponent-tree, bruker man vanligvis *event binding* med
-kustom events. Dette er ikke den eneste måte å passe data oppover i komponentstruktur,
-men når man har direkte parent-child relasjon, er dette en grei måte å gjøre det.
-
-I vår applikasjon har vi parent-child relasjon mellom komponenter *Books* og 
-*SearchComponent*. Siden Books inkluderer *\<search\>*-tag i sin template, er
- den parent-komponent, og SearchComponent er child-komponent.
- Når brukeren utfører søk og får resultater, må fi fortelle nå oppover i strukturen
- at vi har noe som vi ville vise til brukeren.
- Dette kan vi oppnå ved å lage vår egen *custome event* og reagere på den.
-
-## 7.1 Lage en custom event for resultater
-
-**Åpne filen src/book-app/search/search-component.ts**
-
-Der skal vi ha vår custom-event som er av type *EventEmitter*.
-I tillegg til det må vi annotere det slik at Angular kan registrer den.
-Riktig annotasjon her er *@Output()*.
-
-Et eksempel om custom-event:
-```javascript
-@Output() onMyEvent:EventEmitter<MyPayloadType> = new EventEmitter<MyPayloadType>
-```
-
-Siden vi retunerer instanser av Book-klasse fra BookService, er *payload* i dette
-tilfelle *en array av bøker*.
-
-## 7.2 Send events fra søkresultater
-Når vi har vår egen EventEmitter på plass, må vi sende events på riktige tidspunkter
-med den, slik at de komponentene som lytter på oss kan reager på dem.
-Disse tidspunktene i vår tilfelle er når vi *har fått søkresultat* og når brukeren
-har *skrivet i søkefelt mindre enn 2 tegn*.
-
-**Endre koden etter instruksjoner i filen: src/book-app/search/search-component.ts**
-
-## 7.3 Vis resultater ved events i template
-
-Da er vår komponent klar til å sende events, og det som gjenstår, er å definere
-hvordan vi reagerer på dem i parent-komponent. 
-Med andre ord: vi skal *binde på event* i vår parent-komponents template.
-
-F.eks.
-```html
-<mytag (onMyCustomEvent)='myMethodCall($event)'></mytag>
-```
-La merke hvordan man viderefører *payload* fra event til metode-kall ved å bruke '$event'-argument.
-
-**Endre koden etter instruksjoner i filen: src/book-app/books/books.component.ts**
-
-Da kan du søke bøker og se resultater i bok-lista med en gang vi har noenting å vise!
-
-Dette var også siste oppgave, og din applikasjonen er ferdig nå.
-
-**Takk for deltagelse!!**
+## Takk for deltakelse 👍
