@@ -224,9 +224,9 @@ import { Component } from '@angular/core';
     'template': `
         <nav class="nav">
             <ul class="nav__links">
-                <li>Books</li>
-                <li>About</li>
-                <li>Contact</li>
+                <li><a class="nav__link">Books</a></li>
+                <li><a class="nav__link">About</a></li>
+                <li><a class="nav__link">Contact</a></li>
             </ul>
             <span class="nav__title">Book app</span>
         </nav>
@@ -547,9 +547,9 @@ import { Component } from '@angular/core';
     'template': `
         <nav class="nav">
             <ul class="nav__links">
-                <li><a [routerLink]="['books']">Books</a></li>
-                <li><a [routerLink]="['about']">About</a></li>
-                <li><a [routerLink]="['contact']">Contact</a></li>
+                <li><a class="nav__link" [routerLink]="['books']">Books</a></li>
+                <li><a class="nav__link" [routerLink]="['about']">About</a></li>
+                <li><a class="nav__link" [routerLink]="['contact']">Contact</a></li>
             </ul>
             <span class="nav__title">Book app</span>
         </nav>
@@ -564,7 +564,13 @@ Nå burde det være mulig å navigere seg mellom komponenter i appen. Som forkla
 
 Akkurat nå ser alle tabs like ut i `<navbar>`. Selv når vi navigerer til en ny tab så er det ingen indikator på hvilken tab som er aktiv.
 
-Det finnes et direktiv som heter [RouterLinkActive](https://angular.io/docs/ts/latest/guide/router.html#!#router-link-active). Klarer du å få den aktive tabben til å endre utseende? (Tips: du må huske å lage en ny CSS-klasse).
+Det finnes et direktiv som heter [RouterLinkActive](https://angular.io/docs/ts/latest/guide/router.html#!#router-link-active). Klarer du å få den aktive tabben til å endre utseende? 
+
+```
+💡 Tips
+
+Det finnes en ferdig CSS-klasse som heter "nav__link--active"
+```
 
 ## Oppgave 4 - Template bindings
 

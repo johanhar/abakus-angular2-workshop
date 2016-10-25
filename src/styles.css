@@ -81,22 +81,26 @@ tbody tr:hover {
     padding: 0 20px;
 }
 
-.nav a, .nav__links li {
-    color: #F8FAFE;
-    text-decoration: none;
-}
-
-.nav a:hover, .nav__links li:hover {
-    color: #96B2DA;
-    cursor: pointer;
-}
-
 .nav__links {
     flex: 1 0 0;
     list-style: none;
     min-width: 10em;
     margin: 0;
     padding: 0;
+}
+
+.nav__link {
+    color: #F8FAFE;
+    text-decoration: none;
+}
+
+.nav__link:hover {
+    color: #96B2DA;
+    cursor: pointer;
+}
+
+.nav__link--active, .nav__link--active:hover {
+    color: #FF00FF;
 }
 
 .nav__links li {
