@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { BOOK_DATA } from './books.data';
+import { Book } from './book.model';
 
 @Component({
     'selector': 'books',
@@ -12,13 +14,11 @@ import { Component } from '@angular/core';
                 </tr>
             </thead>
             <tbody>
-                <!-- snart lager vi en NgFor her istedenfor -->
-                <tr book-row></tr>
-                <tr book-row></tr>
-                <tr book-row></tr>
-                <tr book-row></tr>
+                <tr *ngFor="let book of books" [book-row]="book"></tr>
             </tbody>
         </table>
     `
 })
-export class Books {}
+export class Books {
+    books: [Book] = BOOK_DATA
+}

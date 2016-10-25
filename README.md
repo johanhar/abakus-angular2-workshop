@@ -650,7 +650,7 @@ Vi kan lage våre egne direktiv som viser eller skjuler deler av vårt view base
 
 La oss teste NgFor i vår egen app.
 
-**Legg til koden i filen: /src/book-app/books/books.component.ts**
+**Rediger: /src/book-app/books/books.component.ts**
 ```javascript
 import { Component } from '@angular/core';
 
@@ -804,8 +804,7 @@ men heller ... :
 ```
 
 ## Oppgave 5 - Input
-Akkurat nå er alle bøker like... 
-Hvordan kan vi gi en liste av BookRow hver sin Book model?
+Akkurat nå er alle bøker like... Hvordan kan vi gi en forskjellige modell av `Book` til hver `BookRow`? La oss se nærmere på dette.
 
 #### Syntaks for input: [squareBrackets]
 Syntaksen for å gi en komponent input er med "square brackets":
@@ -844,12 +843,14 @@ export class SomeComponent {
 }
 ```
 
-La oss late som at Books henter en liste av bøker fra en server (dette kommer vi mer inn på senere).
-Når du skiftet branch i starten av oppgaven (`git checkout -f oppgave3`) fikk du med en fil som vi har laget for deg (/src/book-app/books/book.data.ts.tmp)
-### Endre navnet til filen book.data.ts.tmp til book.data.ts (altså fjern .tmp fra navnet)
+### 5.1 - Liste av forskjellige bøker
+La oss late som at Books henter en liste av bøker fra en server. Denne listen er ganske stor, derfor har vi lagt den i en egen gist.
 
-### Endre BookRow til å ta imot Book med @Input
-**/src/book-app/books/book-row.component**
+**Opprett en ny fil: /src/book-app/books/books.data.ts**
+[Filens innhold ligger her](https://gist.github.com/johanhar/010ba1b81d67226b4fa9a830a71ca52c)
+
+### 5.2 - Endre BookRow til å ta imot Book med @Input
+**Rediger filen: /src/book-app/books/book-row.component**
 ```javascript
 import { Component, Input } from '@angular/core';
 import { Book } from './book.model';
@@ -867,21 +868,17 @@ export class BookRow {
 }
 ```
 
-Nå er BookRow en ganske enkel komponent, den tar en bok og viser dataen uten noe mer enn det.
-Ser du i nettleseren nå får du sikkert opp noen feil eller et tomt view, bare fortsett til neste oppgave,
-det som mangler er at vi ikke gir BookRow noen Book enda.
+Nå er BookRow en ganske enkel komponent, den tar en bok og viser dataen uten noe mer enn det. Ser du i nettleseren nå får du sikkert opp noen feil eller et tomt view, bare fortsett til neste oppgave, det som mangler er at vi ikke gir BookRow noen Book enda.
 
-### Gi hver BookRow sin egen Book
-**/src/book-app/books/books.component**
+### 5.2 - Gi hver BookRow sin egen Book
+**Rediger filen: /src/book-app/books/books.component**
 ```javascript
 import { Component } from '@angular/core';
-import { BookRow } from './book-row.component';
-import { BOOK_DATA } from './book.data';
+import { BOOK_DATA } from './books.data';
 import { Book } from './book.model';
 
 @Component({
     'selector': 'books',
-    'directives': [BookRow],
     'template': `
         <table>
             <thead>
@@ -904,7 +901,7 @@ export class Books {
 
 Ta en titt i nettleseren din, det bør nå fungere igjen.
 
-## Oppgave 3.5 - Output
+## Oppgave 6 - Output
 Nå har vi sett på input. Hvordan kan en komponent sende output til sin parent og fortelle om events og lignende?
 
 #### Syntaks for output: (parentes)
