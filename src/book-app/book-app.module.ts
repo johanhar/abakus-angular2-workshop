@@ -7,6 +7,7 @@ import { About } from './about/about.component';
 import { Books } from './books/books.component';
 import { Contact } from './contact/contact.component';
 import { BookRow } from './books/book-row.component';
+import { BookDetails } from './books/book-details.component';
 
 import {
     RouterModule,
@@ -30,6 +31,10 @@ const routes: Routes = [
     {
         path: 'contact',
         component: Contact
+    },
+    {
+        path: 'bookdetails/:id',
+        component: BookDetails
     }
 ];
 
@@ -44,7 +49,8 @@ const routes: Routes = [
         About,
         Books,
         Contact,
-        BookRow
+        BookRow,
+        BookDetails
     ],
     bootstrap: [
         BookApp

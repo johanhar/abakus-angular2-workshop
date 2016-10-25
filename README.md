@@ -934,12 +934,70 @@ bookSelected(book: Book) {
 
 Consolen i nettleseren din skal nå printe ut boken du klikker på.
 
-Før vi navigerer videre fra tabellen til et eget view med mer detaljer for boken må vi ta en innføring i DI (Dependency Injection). Vi må nemlig ha tak i `Router` i vår komponent slik at vi kan gjøre noe lignende:
+### 6.2 - Lag en side som viser detaljer for boken
+**Opprett filen: src/book-app/books/book-details.component.ts**
 ```javascript
-bookSelected(book: Book) {
-    this.router.navigate(['/books', book.id]);
+import { Component } from '@angular/core';
+
+@Component({
+    'selector': 'book-details',
+    'template': `
+        <a [routerLink]="['books']">Take me back</a>
+        <p>Currently not so many details to be found, come back later</p>
+    `
+})
+export class BookDetails {}
+```
+
+**Opprett en rute for detalje-siden: src/book-app/book-app.module.ts**
+```javascript
+{
+  path: 'bookdetails/:id',
+  component: BookDetails
 }
 ```
+
+**Husk å deklarere BookDetails i BookAppModule**
+
+### 6.3 - Naviger til detalje-siden fra listen av bøker
+**Rediger filen: src/book-app/books/books.component.ts**
+```javascript
+//
+// La gamle imports stå
+//
+import { Router } from '@angular/router';
+
+//
+// La @Component stå som før
+//
+@Component(...)
+export class Books {
+    books: [Book] = BOOK_DATA;
+
+    constructor(private router: Router) {}
+
+    bookSelected(book: Book) {
+        this.router.navigate(['bookdetails', book.id]);
+    }
+}
+```
+
+Legg merke til at vi aldri sier `new Router()` noe sted ... Er ikke det litt pussig? :) Husk at det er Angular som lager en instans av `Books` komponenten for oss. Når Angular kaller constructoren til `Books` gjenkjenner den argumentet som krever en `Router` og sørger for å gi en ferdig initialisert instans, klar for bruk. Dette er en del av det som kalles for Dependency Injection (DI). Angular er bygd rundt DI. 
+
+For at dette er mulig så må vi først registrere `Router` som en mulig avhengighet, altså noe som kan injectes. Dette er allerede gjort for oss (fordi det er en standard komponent som følger med Angular, vi har ikke skrevet den selv). 
+
+Vi har allerede sagt til DI-systemet at vi vil kunne være avhengig av `Router` som ligger i modulen  `RouterModule`, dette gjorde vi da vi skrev følgende kode i vår `BookAppModule`:
+```javascript
+@NgModule({
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(routes)
+    ]
+    ...
+```
+
+Så når vi da krever et argument av typen `Router` i constructor til en komponent deklarert i `BookAppModule` - så vil Angular automatisk sørge for å gi den komponenten en ferdig initialisert `Router`, klar for bruk.
+
 
 ## Oppgave 7 - Dependency Injection
 Ulike deler av vår app vil måtte kommunisere med hverandre. Hvordan gjør vi dette i Angular?
@@ -964,7 +1022,7 @@ class LoginService {
 }
 ```
 
-Hadde det ikke vært mye bedre om `LoginService` fikk sine avhengigheter ved initialisering? Da blir det jo også mye enklere å mocke denne klassen hvis man skulle ha behov for det i forbindelse enhetstesting. Da kan man også se med en gang alt det `LoginService` noen gang vil komme til å bruke av andre klasser, man slipper å lese seg gjennom hele klassen for å danne et bilde om hvordan klassene avhenger av hverandre.
+Hadde det ikke vært mye bedre om `LoginService` fikk sine avhengigheter ved initialisering? Da blir det jo også mye enklere å mocke denne klassen hvis man skulle ha behov for det i forbindelse enhetstesting. Da kan man også se alt det `LoginService` noen gang vil komme til å bruke av andre klasser med å bare lese constructoren, man slipper å lese seg gjennom hele klassen for å danne et bilde om hvordan klassene avhenger av hverandre.
 
 ```javascript
 import { LogService } from 'log-service';
@@ -988,10 +1046,6 @@ Forskjellen er stor men enkel. Det er systemet (Angular) som tar seg av initiali
 
 ### 7.1 - Inject Router i Books
 På JavaZone 2016 kjørte vi denne workshopen og gikk mer i dybden rundt DI. Nå har vi begrenset med tid og må droppe den delen hvor vi lærer deg hvordan en komponent eller service i Angular kan registrere seg til DI-systemet slik at andre komponenter kan få den injected.
-
-Det eneste du trenger å vite nå for å gå videre er at vi har allerede sagt til DI-systemet at vi vil kunne være avhengig av `Router` i modulen  `RouterModule`.
-
-Så når vi da krever et argument av typen `Router` i constructor til en komponent deklarert i `BookAppModule` - så vil Angular automatisk sørge for å gi den komponenten en ferdig initialisert `Router`, klar for bruk.
 
 **Rediger filen: src/book-app/books/books.component.ts**
 ```javascript

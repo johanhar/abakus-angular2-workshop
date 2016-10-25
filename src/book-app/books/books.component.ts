@@ -26,6 +26,6 @@ export class Books {
     constructor(private router: Router) {}
 
     bookSelected(book: Book) {
-        this.router.navigate(['/bookdetails', { id: book.id }]);
+        this.router.navigate(['bookdetails', book.id]);
     }
 }
