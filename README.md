@@ -92,7 +92,7 @@ I eksempelet ovenfor konfigurer vi to ting for vår komponent:
 #### View
 Også kalt Template, det er her vi legger vår HTML. 
 
-Vi valgte å putte HTML direkte i vår metadata, men vi kan velge å plassere HTML i en egen fil:
+Vi valgte å putte HTML direkte i vår metadata, men vi kan velge å plassere HTML i en egen fil/url:
 
 ```javascript
 @Component({
@@ -106,7 +106,7 @@ Her har vi valgt å definere Component sitt view (template) i en egen fil med na
 #### Controller
 Selve logikken til en Component legger vi i klassen, kalt kontrolleren. Her kan vi ha variabler og funksjoner som blir tilgjengelige for vårt View (template). Dette gjør at appen vår blir interaktiv for brukeren. Det som for eksempel skal skje når brukeren trykker på en knapp i Component sitt View kan man legge i klassen. Mer om dette senere.
 
-### Gå riktig branch før du starter oppgaven
+### 1.1 Gå riktig branch før du starter oppgaven
 Du står sannsynligvis i `master` branchen til prosjektet nå, 
 før du setter i gang med oppgave 1 så må du hoppe over til en egen branch som gir deg riktig utgangspunkt for å sette i gang med oppgavene.
 Åpne en terminal og gå til roten av prosjektmappen.
@@ -116,8 +116,8 @@ git checkout -f oppgave1-2
 ```
 Det er viktig at du bruker **-f opsjonen** i kommandoen!
 
-### Opprett appens rot-komponent
-Angular er som sagt et tre av komponenter, vi starter med å opprette selve roten som igjen vil bruke andre komponenter.
+### 1.2 Opprett rot-komponent
+Angular er som sagt et tre av komponenter, vi starter med å opprette selve roten som igjen vil bruke andre komponenter og danne et tre av komponenter.
 
 La oss kalle den noe så enkelt som `BookApp`.
 
@@ -132,25 +132,63 @@ import { Component } from '@angular/core';
 export class BookApp {}
 ```
 
-Vi er ikke helt klar til å bygge og kjøre appen enda, først må vi bootstrappe rot-komponenten.
+Vi er ikke helt klar til å bygge og kjøre appen enda, først må vi lage vår første modul.
 
-### Bootstrap appen
-En Angular applikasjon må bootstrappes med rot-komponenten. 
-Dette gjør at vi kan bruke `<book-app>` elementet fra `index.html`. 
-Resten av appen har sitt utspring fra rot-komponenten.
+### 1.3 Opprett en modul
+Angular hjelper oss å organisere koden med såkalte moduler. I motsetning til Angular 1 hvor alle komponenter er praktisk talt globale, så har man i Angular 2 mulighet til å avgrense tilgjengelighet med moduler. Dette gjør appen mer vedlikeholdbar og skalerbar. For de som er kjent med Java så kan man sammenligne dette med pakker som igjen består av klasser. Dette gir oss noen fordeler:
+
+- Enkelt å se hvilke komponenter som hører sammen (de er lagt sammen i en modul)
+- Enkelt å se hvor komponenter kommer fra (du må eksplisitt importere modulen)
+- Man får et tydelig grensesnitt/API på et litt høyere nivå
+
+**Opprett en fil: /src/book-app/book-app.module.ts**
+```javascript
+import { NgModule } from '@angular/core';
+import { BrowserModule }  from '@angular/platform-browser';
+
+import { BookApp } from './book-app.component';
+
+@NgModule({
+    imports: [
+        BrowserModule
+    ],
+    declarations: [
+        BookApp
+    ],
+    bootstrap: [
+        BookApp
+    ]
+})
+export class BookAppModule {}
+```
+
+#### Imports
+En modul har mulighet til å bruke andre moduler, her må vi importere `BrowserModule` (som kommer fra Angular) fordi det er en app som skal kjøre i nettleseren.
+
+#### Declarations
+Akkurat nå har vi bare en komponent å deklarere. Senere vil modulen bestå av flere andre komponenter, da vil vi måtte legge dem inn her for å si at de også er en del av denne modulen.
+
+#### Bootstrap
+Her legger vi inn rot-komponenten, top-level komponenten som vi skal "bootstrappe".
+
+### 1.4 Bootstrap appen
+Når vi setter opp en Angular applikasjon så må vi definere en fil hvor vi starter appen fra. Dette har vi allerede gjort for deg, så dette trenger du ikke å tenke på. Man kan se på det som Java sin main-metode, selve utgangspunktet for hvor appen starter å kjøre. Vi har valgt å starte appen fra `src/main.ts`. 
+
+Vi sier at vi bootstrapper appen. Når vi bootstrapper en app så gir vi Angular den modulen som inneholder vår rot-komponent, fra her vil Angular gå gjennom hele treet av komponenter og sørge for at våre nye komponenter kan brukes.
 
 **Rediger /src/main.ts**
 ```javascript
-import { bootstrap } from '@angular/platform-browser-dynamic';
-import { BookApp } from './book-app/book-app.component';
-
-bootstrap(BookApp, []);
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from '@angular/core';
+import { BookAppModule } from './book-app/book-app.module';
+if (process.env.ENV === 'production') {
+    enableProdMode();
+}
+platformBrowserDynamic().bootstrapModule(BookAppModule);
 ```
 
-For å gi en kort forklaring på metodekallet `bootstrap(Component, [dependencies])` 
-så vil Angular starte applikasjonen med BookApp som rot-komponent, 
-og i det tomme arrayet har vi mulighet til å oppgi avhengigheter som vil være tilgjengelige 
-hvor som helst i appen for alle komponenter som skulle trenge dette.
+TODO:
+`platformBrowserDynamic` er en funksjon som gjør seg kjent med hvilken nettleser vi kjører appen i og vet hvordan appen vår app kan kjøre ... hmm kommer ikke på en god forklaring her
 
 Nå kan vi ta i bruk `<book-app>` i vår `index.html`.
 
