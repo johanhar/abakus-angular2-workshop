@@ -3,14 +3,46 @@ import { BrowserModule }  from '@angular/platform-browser';
 
 import { BookApp } from './book-app.component';
 import { Navbar } from './navbar.component';
+import { About } from './about/about.component';
+import { Books } from './books/books.component';
+import { Contact } from './contact/contact.component';
+
+import {
+    RouterModule,
+    Routes
+} from '@angular/router';
+
+const routes: Routes = [
+    {
+        path: '',
+        redirectTo: 'books',
+        pathMatch: 'full'
+    },
+    {
+        path: 'about',
+        component: About
+    },
+    {
+        path: 'books',
+        component: Books
+    },
+    {
+        path: 'contact',
+        component: Contact
+    }
+];
 
 @NgModule({
     imports: [
-        BrowserModule
+        BrowserModule,
+        RouterModule.forRoot(routes)
     ],
     declarations: [
         BookApp,
-        Navbar
+        Navbar,
+        About,
+        Books,
+        Contact
     ],
     bootstrap: [
         BookApp

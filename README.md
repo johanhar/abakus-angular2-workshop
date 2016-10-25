@@ -292,39 +292,50 @@ Nå deklareres både `BookApp` og `Navbar` av `BookAppModule`, som gjør at elem
 
 Nå kan du ta en titt i nettleseren etter alle endringer er lagret. Du trenger ikke å kjøre `npm start` om igjen, [http://localhost:8080](http://localhost:8080) oppdateres automatisk ved endringer.
 
-## Oppgave 2 - Routing
-Du har kanskje hørt uttrykket "Single Page Application". Angular sin router gjør det mulig å endre nettleseren sin URL uten at man gjør et nytt page load, og bytte ut deler av siden med andre komponenter for bestemte ruter.
+## Oppgave 3 - Routing
+Du har kanskje hørt uttrykket "Single Page Application". Angular sin router gjør det mulig å endre nettleseren sin URL uten at man gjør et nytt "page load" / request. Vi kan tenke oss at vi deler skjermbildet i nettleseren opp i ulike områder som vi bytter ut for ulike ruter.
 
-#### RouterConfig
+```
+💡 Rute, router, hæ?
+
+Vi har oversatt det engelske ordet "route" til "rute" - men det passer kanskje ikke så godt på norsk. I tillegg så har vi ikke oversatt "router" (ruter kan tolkes som et flertall av rute), så det blir en god blanding av norsk og engelsk ... 🙄
+
+Rute: tenk deg at man har en sti/vei/retning (altså en rute) som tar deg til en destinasjon.
+Router: har et sett av regler som bestemmer når vi befinner oss på en rute. Routeren gjør selve rutingen (endrer nåværende rute basert på en regel)
+```
+
+For å bruke routing i Angular må man forholde seg til tre konsept:
+1. Routes
+2. RouterOutlet
+3. RouterLink
+
+#### Routes
 Brukes til å beskrive appens ruter, for eksempel:
 
 ```javascript
+//
 // Dette er bare et eksempel og ikke en del av oppgaven
-const routes: RouterConfig = [
+//
+const routes: Routes = [
   { path: '', redirectTo: 'home', terminal: true },
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'contactus', redirectTo: 'contact' },
 ];
-
-bootstrap(RoutesDemoApp, [
-  provideRouter(routes), // <-- installs our routes
-  provide(LocationStrategy, {useClass: HashLocationStrategy})
-]);
 ```
 
-Ovenfor ser vi at man bootstrapper appen samtidig som vi forteller Angular hvilke ruter vi skal ha. 
-Man kan for eksempel definere alle ruter ved bootstrapping på et sted (som her), eller la hver komponent selv fortelle hvilke ruter den tilbyr.
+Vi ser altså at det er en sammenheng mellom URL (path) og komponent. Når vi befinner oss på http://localhost:8080/about så er det `AboutComponent` som skal vises.
 
 #### RouterOutlet
 Fungerer som en placeholder for innholdet til en rute, for eksempel:
 
 ```javascript
-// Dette er bare eksempel og ikke en del av oppgaven
+//
+// Dette er bare et eksempel og ikke en del av oppgaven
+//
 @Component({
   selector: 'router-app',
-  'directives': [ROUTER_DIRECTIVES],
   template: `
   <div>
     <nav>
@@ -347,7 +358,7 @@ class RoutesDemoApp {
 Her vil `<router-outlet>` bli fyllt med riktig komponent for den ruten man befinner seg på.
 
 #### RouterLink
-Et direktiv brukt til å linke til ruter.
+Et såkalt direktiv brukt til å linke til ruter.
 
 ```html
 <li><a [routerLink]="['home']">Home</a></li>
@@ -363,10 +374,19 @@ Det man trenger å forstå foreløpig er at routerLink er et direktiv som gjør 
 Heller skriver:
 
 ```html
-<a [routerLink]="['path definert i RouterConfig']">
+<a [routerLink]="['path definert i Routes']">
 ```
 
-## Oppgave 2.1 - Opprett komponenter for rutene
+#### Directive
+Hvis du kommer fra Angular 1 har du sikkert hørt om Directive (direktiv på norsk). 
+
+Angular 2 bruker fortsatt begrepet direktiv, det er nemlig sånn at Component er en subtype av Directive. 
+
+Det finnes tre typer direktiv, hvor Component er en av typene. "Structural directives" og "Attribute directives" er de to andre. Du kan lese mer om dette [her](https://angular.io/docs/ts/latest/guide/architecture.html#!#directives).
+
+Dette er ikke så viktig å forstå akkurat nå, man kan trygt gå videre med oppgavene uten å føle at man forstår dette konseptet om direktiv.
+
+### 3.1 - Opprett komponenter for rutene
 Før vi lager selve rutene oppretter vi noen foreløpig tomme komponenter.
 
 Legg merke til at vi her velger å legge hver komponent i en egen mappe under rot komponenten.
@@ -432,36 +452,32 @@ export class About {}
 Nå har vi fått på plass noen komponenter som vi kan rute til.
 Fortsett med neste oppgave, det er ikke mye nytt å se i [http://localhost:8080](http://localhost:8080) enda.
 
-## Oppgave 2.2 - Definer ruter til hver komponent
-
-### Definer ruter ved bootstrapping
-**/src/main.ts**
+### 3.2 - Definer ruter til hver komponent
+**Editer /src/main.ts**
 ```javascript
-import { bootstrap } from '@angular/platform-browser-dynamic';
+import { NgModule } from '@angular/core';
+import { BrowserModule }  from '@angular/platform-browser';
 
-import { BookApp } from './book-app/book-app.component';
-import { About } from './book-app/about/about.component';
-import { Books } from './book-app/books/books.component';
-import { Contact } from './book-app/contact/contact.component';
+import { BookApp } from './book-app.component';
+import { Navbar } from './navbar.component';
+import { About } from './about/about.component';
+import { Books } from './books/books.component';
+import { Contact } from './contact/contact.component';
 
-import {bind, Component} from '@angular/core';
 import {
-  ROUTER_DIRECTIVES,
-  provideRouter,
-  Router,
-  RouterConfig
+    RouterModule,
+    Routes
 } from '@angular/router';
 
-import {LocationStrategy, HashLocationStrategy} from '@angular/common';
-
-const routes: RouterConfig = [
+// 1
+const routes: Routes = [
     {
-        path: '', 
-        redirectTo: 'books', 
-        terminal: true
+        path: '',
+        redirectTo: 'books',
+        pathMatch: 'full'
     },
     {
-        path: 'about', 
+        path: 'about',
         component: About
     },
     {
@@ -474,26 +490,40 @@ const routes: RouterConfig = [
     }
 ];
 
-bootstrap(BookApp, [
-    provideRouter(routes),
-    bind(LocationStrategy).toClass(HashLocationStrategy)
-]);
+@NgModule({
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(routes) // 2
+    ],
+    declarations: [ // 3
+        BookApp,
+        Navbar,
+        About,
+        Books,
+        Contact
+    ],
+    bootstrap: [
+        BookApp
+    ]
+})
+export class BookAppModule {}
 ```
 
-Som nevnt tidligere kan vi også la hver komponent selv bestemme sine egne ruter, men her i denne workshopen gjør vi det enkelt med at alle ruter defineres ett sted ved bootstrapping.
+Oj, her har det skjedd mye :) La oss gå gjennom disse endringene steg for steg, i koden er det lagt igjen kommentarer med hvert sitt nummer:
+
+1. Vi definerer rutene for modulen. `pathMatch: 'full'` betyr kort sagt at vi alltid omdirigeres til `''` for en ugyldig URL.
+2. `RouterModule.forRoot(routes)` er en funksjon som tar våre ruter, konfigurer dem og returnerer en liste av avhengigheter vi må importere i vår modul som er nødvendig for å få rutene til å fungere.
+3. Nå som vi har laget mange nye komponenter så må vi deklarere disse også.
 
 Hvis vi tar en titt i consolen til nettleseren vår nå finner vi sikkert flere feil.
 Dette skyldes at rot komponenten ikke har tatt i bruk `RouterOutlet`, dette skal vi fikse nå.
 
-### Ta i bruk RouterOutlet
-**/src/book-app/book-app.component.ts**
+### 3.3 - Ta i bruk RouterOutlet
+**Editer /src/book-app/book-app.component.ts**
 ```javascript
 import { Component } from '@angular/core';
-import { Navbar } from './navbar.component';
-import { ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
-    'directives': [Navbar, ROUTER_DIRECTIVES],
     'selector': 'book-app',
     'template': `
         <div class="main-container">
@@ -507,14 +537,12 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 export class BookApp {}
 ```
 
-### Ta i bruk RouterLink
-**/src/book-app/navbar.component.ts**
+### 3.4 - Ta i bruk RouterLink
+**Editer /src/book-app/navbar.component.ts**
 ```javascript
 import { Component } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
 
 @Component({
-    'directives': [ROUTER_DIRECTIVES],
     'selector': 'navbar',
     'template': `
         <nav class="nav">
@@ -530,11 +558,9 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 export class Navbar {}
 ```
 
-Nå burde det være mulig å navigere seg mellom komponenter i appen.
-Som forklart tidligere er det bare den delen av siden hvor man har plassert `<router-outlet>` at man bytter til en ny komponent for hver rute.
-Istedenfor å bruke `<a href="..">` så bruker vi `<a [routerLink]="['rute']">` til å linke mellom ruter. 
+Nå burde det være mulig å navigere seg mellom komponenter i appen. Som forklart tidligere er det bare den delen av siden hvor man har plassert `<router-outlet>` at man bytter til en ny komponent for hver rute. Istedenfor å bruke `<a href="..">` så bruker vi `<a [routerLink]="['rute']">` til å linke mellom ruter. 
 
-## Oppgave 3 - Template bindings
+## Oppgave 4 - Template bindings
 
 ### Gå riktig branch før du starter oppgaven
 ```

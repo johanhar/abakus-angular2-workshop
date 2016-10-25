@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
             <navbar></navbar>
 
             <div class="container">              
-               
+                <router-outlet></router-outlet>
             </div>
         </div>
     `
