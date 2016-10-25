@@ -560,6 +560,12 @@ export class Navbar {}
 
 Nå burde det være mulig å navigere seg mellom komponenter i appen. Som forklart tidligere er det bare den delen av siden hvor man har plassert `<router-outlet>` at man bytter til en ny komponent for hver rute. Istedenfor å bruke `<a href="..">` så bruker vi `<a [routerLink]="['rute']">` til å linke mellom ruter. 
 
+### 3.5 - Bonusoppgave
+
+Akkurat nå ser alle tabs like ut i `<navbar>`. Selv når vi navigerer til en ny tab så er det ingen indikator på hvilken tab som er aktiv.
+
+Det finnes et direktiv som heter [RouterLinkActive](https://angular.io/docs/ts/latest/guide/router.html#!#router-link-active). Klarer du å få den aktive tabben til å endre utseende? (Tips: du må huske å lage en ny CSS-klasse).
+
 ## Oppgave 4 - Template bindings
 
 ### Gå riktig branch før du starter oppgaven
