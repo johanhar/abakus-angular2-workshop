@@ -11,8 +11,6 @@ I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av
 - Dependency Injection
 - Angular sine Lifecycle Hooks
 
-Vi fokuserer primært på Angular og TypeScript. Likevel er det mange andre ting som må være på plass for å få en moderne web-app til å fungere. Det er mange "buzzwords" (node, webpack, transpilering, sass, ++) å lære seg, men vi dekker ikke alle disse i denne omgang. Hvis man likevel skulle være nysgjerrig og er ferdig med alle oppgavene før tiden kan man ta en titt på [vårt oppsett av Webpack](https://angular.io/docs/ts/latest/guide/webpack.html). 
-
 ### Ferdig løsning
 LINK TIL FERDIG LØSNING ...
 
@@ -1111,3 +1109,5 @@ Workshopen denne gang hadde litt begrenset med tid, håper du likevel fikk en go
 Har du tid til overs er det bare å rekke opp en hånd, vi har noen bonusoppgaver på lur ;)
 
 Ønsker du å lære mer på egenhånd anbefaler vi [angular.io](http://angular.io) sine egne tutorials og spesielt denne boken [her](https://www.ng-book.com/2/).
+
+Det kan også være verdt å ta en titt på workshopen sitt [oppsett av Webpack](https://angular.io/docs/ts/latest/guide/webpack.html). 
