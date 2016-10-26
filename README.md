@@ -1134,7 +1134,7 @@ En FormGroup er en samling av FormControls.
 Vi må altså opprette en `FormControl` i vår kontroller/klasse og binde denne opp et element i templaten - for alle elementer.
 
 ### 8.1 - Lag et tomt skjema
-**Editer filen: src/book-app/contact/contact.components.ts**
+**Editer filen: src/book-app/contact/contact.component.ts**
 ```javascript
 import { Component } from '@angular/core';
 
@@ -1155,7 +1155,7 @@ export class Contact {}
 Dette er utgangspunktet for skjemaet som vi skal bygge videre på. Ta en titt i nettleseren at alt ser greit ut så langt..
 
 ### 8.2 - Opprett FormControls og en FormGroup
-**Editer filen: src/book-app/contact/contact.components.ts**
+**Editer filen: src/book-app/contact/contact.component.ts**
 ```javascript
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
@@ -1209,7 +1209,7 @@ Dette er nødvendige avhengigheter vi kommer til å få når vi skal jobbe med f
 Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
 
 ### 8.3 - Bind FormControls til elementer i templaten
-**Rediger deler av filen: src/book-app/contact/contact.components.ts**
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
 ```html
 <input type="text" 
        name="name" 
@@ -1222,14 +1222,14 @@ Gjør det samme for epost- og meldingsfelt.
 Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
 
 ### 8.4 - Bind FormGroup til formen i templaten
-**Rediger deler av filen: src/book-app/contact/contact.components.ts**
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
 ```html
 <form [formGroup]="contactForm" (ngSubmit)="onSubmit(contactForm.value)">
 ```
 
 Her har vi også tatt i bruk det innebygde direktivet `(ngSubmit)`. Det fungerer på lik måte som `(click)`. Funksjonen vi binder til må vi også lage:
 
-**Rediger deler av filen: src/book-app/contact/contact.components.ts**
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
 ```javascript
 onSubmit(value: string): void {
 	console.log('you submitted value: ', value);
@@ -1241,7 +1241,7 @@ Nå er det endelig mulig å se endringer i nettleseren. Åpne consolen og sjekk 
 ### 8.5 - Feedback ved innsending
 Det er kanskje litt kjedelig å bare logge til console, la oss gjøre appen litt mer "ekte" med å gi en tilbakemelding.
 
-**Rediger deler av filen: src/book-app/contact/contact.components.ts**
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
 ```javascript
 //
 // Dette er ikke hele filen
