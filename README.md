@@ -1114,7 +1114,225 @@ Denne oppgaven er kun relevant hvis du gjorde bonusoppgave 3.5...
 
 Når du navigerer deg inn på en bok ( `/bookdetails` ) forsvinner CSS-klassen som gjør "Books" tabben aktiv. Klarer du markere "Books"-tabben som aktiv i navigasjonsbaren selv når vi er inne på `/bookdetails` ?
 
+Her er noen mulige hint (det finnes nok flere ulike løsninger, man må ikke løse det med følgende hint):
+
+- [NgClass](https://angular.io/docs/ts/latest/api/common/index/NgClass-directive.html)
+- [ActivatedRoute](https://angular.io/docs/ts/latest/api/router/index/ActivatedRoute-interface.html)
+
+## Oppgave 8 - Forms / skjema
+Det er kanskje ikke så mange som bruker fax i dag. La oss lage et kontaktskjema under `/contact` istedenfor å be om fax.
+
+Før vi setter i gang tar vi en kjapp runde på teori og gjør deg kjent med de komponenter vi skal bruke.
+
+#### FormControl
+En FormControl representerer et felt i et skjema. For eksempel `<input>` eller `<select>`.
+
+#### FormGroup
+En FormGroup er en samling av FormControls.
+
+Vi må altså opprette en `FormControl` i vår kontroller/klasse og binde denne opp et element i templaten - for alle elementer.
+
+### 8.1 - Lag et tomt skjema
+**Editer filen: src/book-app/contact/contact.components.ts**
+```javascript
+import { Component } from '@angular/core';
+
+@Component({
+    'selector': 'contact',
+    'template': `
+        <form>
+            <input type="text" name="name" placeholder="Name *">
+            <input type="email" name="email" placeholder="Email">
+            <textarea placeholder="Message *" name="message"></textarea>
+            <button type="submit">Contact us</button>
+        </form>
+    `
+})
+export class Contact {}
+```
+
+Dette er utgangspunktet for skjemaet som vi skal bygge videre på. Ta en titt i nettleseren at alt ser greit ut så langt..
+
+### 8.1 - Opprett FormControls og en FormGroup
+**Editer filen: src/book-app/contact/contact.components.ts**
+```javascript
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+
+@Component({
+    'selector': 'contact',
+    'template': `
+        <form>
+            <input type="text" name="name" placeholder="Name *">
+            <input type="email" name="email" placeholder="Email">
+            <textarea placeholder="Message *" name="message"></textarea>
+            <button type="submit">Contact us</button>
+        </form>
+    `
+})
+export class Contact {
+    contactForm: FormGroup;
+    nameControl: AbstractControl;
+    emailControl: AbstractControl;
+    messageControl: AbstractControl;
+
+    constructor(formBuilder: FormBuilder) {
+        this.contactForm = formBuilder.group({
+            'email': [''],
+            'name': [''],
+            'message': ['']
+        });
+        this.nameControl = this.contactForm.controls['name'];
+        this.emailControl = this.contactForm.controls['email'];
+        this.messageControl = this.contactForm.controls['message'];
+    }
+}
+```
+
+**Importer nye moduler: src/book-app/book-app.module.ts**
+```javascript
+import { FormsModule, ReactiveFormsModule
+} from '@angular/forms';
+
+@NgModule({
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(routes),
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    ...
+```
+Dette er nødvendige avhengigheter vi kommer til å få når vi skal jobbe med forms og validering.
+
+Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
+
+### 8.2 - Bind FormControls til elementer i templaten
+**Rediger deler av filen: src/book-app/contact/contact.components.ts**
+```html
+<input type="text" 
+       name="name" 
+       placeholder="Name *"
+       [formControl]="nameControl">
+```
+
+Gjør det samme for epost- og meldingsfelt.
+
+Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
+
+### 8.3 - Bind FormGroup til formen i templaten
+**Rediger deler av filen: src/book-app/contact/contact.components.ts**
+```html
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit(contactForm.value)">
+```
+
+Her har vi også tatt i bruk det innebygde direktivet `(ngSubmit)`. Det fungerer på lik måte som `(click)`. Funksjonen vi binder til må vi også lage:
+
+```javascript
+onSubmit(value: string): void {
+	console.log('you submitted value: ', value);
+}
+```
+
+Nå er det endelig mulig å se endringer i nettleseren. Åpne consolen og sjekk om alle felter i skjemaet logges ved innsending.
+
+### 8.4 - Feedback ved innsending
+Det er kanskje litt kjedelig å bare logge til console, la oss gjøre appen litt mer "ekte" med å gi en tilbakemelding.
+
+**Rediger deler av filen: src/book-app/contact/contact.components.ts**
+```javascript
+//
+// Dette er ikke hele filen
+// Bare det som du skal legge inn ekstra på riktige steder
+// Du skal ikke fjerne/erstatte eksisterende kode
+//
+
+// Legg til en melding i templaten
+@Component({
+    'template': `
+        <p class="center" *ngIf="submitted">Thank you for contacting us!</p>
+    `
+})
+
+export class Contact {
+	// Legg til en ny property (brukes av *ngIf)
+    submitted: boolean = false;
+    
+  	onSubmit(value: string): void {
+        console.log('you submitted value: ', value);
+        this.contactForm.reset();
+        this.submitted = true;
+
+        setTimeout(() => {
+            this.submitted = false;
+        }, 2000);
+    }
+}
+```
+
+Du vil nå få opp en melding i nettleseren ved innsending av skjemaet.
+
+Som vi har snakket om før så vil `<p *ngIf="submitted">` sitt innhold vises/skjules når `submitted` endres. Angular tar seg av endringer i viewet, man trenger bare å endre `submitted` og så vil resten skje automatisk.
+
+### 8.5 - Slå av HTML5 validering
+Som du kan se har vi prøvd å merke navn og melding som obligatorisk med å bruke stjerne, 
+en typisk måte å si til brukeren at dette feltet må være med (`placeholder="Name *"`). Vi har også et felt for epost, som nå valideres av nettleseren din (HTML5).
+
+Ofte ønsker vi kontrollen på feilmeldinger selv, så la oss starte med å slå av HTML5 validering.
+
+**Rediger: /src/book-app/contact/contact.component.ts**
+```html
+<form [formGroup]="contactForm" 
+    (ngSubmit)="onSubmit(contactForm.value)" 
+    novalidate>
+
+<input type="email" 
+    name="email" 
+    placeholder="Email"
+    [formControl]="emailControl" 
+    novalidate>
+```
+
+Det er ikke så mye nytt å se i nettleseren enda, gå videre til neste oppgave.
+
+### 8.6 - Legg til feilmeldinger
+Det er mange måter å vise feilmeldinger på, vi gjør det enkelt (og ikke nødvendigvis best) med å vise alle type feil i toppen av skjema i en samlet `<div>`.
+
+**Rediger: /src/book-app/contact/contact.component.ts**
+```html
+<div class="center">
+  <p *ngIf="!nameControl.valid && nameControl.touched">Name is required</p>
+  <p *ngIf="!emailControl.valid && emailControl.touched">Email is invalid</p>
+  <p *ngIf="!messageControl.valid && messageControl.touched">Message is required</p>
+</div>
+```
+
+Det er ikke så mye nytt å se i nettleseren enda, gå videre til neste oppgave.
+
+### 8.7 - Legg på validering
+```javascript
+    constructor(formBuilder: FormBuilder) {
+        this.contactForm = formBuilder.group({
+            'email': ['', Validators.pattern('^[^ ]+@[^ ]+\\.[^ ]+$')],
+            'name': ['', Validators.required],
+            'message': ['', Validators.required]
+        });
+        this.nameControl = this.contactForm.controls['name'];
+        this.emailControl = this.contactForm.controls['email'];
+        this.messageControl = this.contactForm.controls['message'];
+    }
+```
+Husk å importere `Validators` fra '@angular/forms'.
+
+Nå kan du prøve å sende formen og se om valideringen fungerer!
+
+### 8.8 - Bonusoppgave
+Se om du klarer å gjøre `<button type="submit">` disabled (grået ut og ikke klikkbar) når skjemaet ikke er gyldig.
+
+Hint: det finnes et `[disabled]` direktiv.
+
 ## Takk for deltakelse 👍
+
 Workshopen denne gang hadde litt begrenset med tid, håper du likevel fikk en god smakebit på hva Angular 2 og TypeScript har å tilby.
 
 Har du tid til overs er det bare å rekke opp en hånd, vi har noen bonusoppgaver på lur ;)

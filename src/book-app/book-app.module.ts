@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
 
+import { FormsModule, ReactiveFormsModule
+} from '@angular/forms';
+
 import { BookApp } from './book-app.component';
 import { Navbar } from './navbar.component';
 import { About } from './about/about.component';
@@ -41,7 +44,9 @@ const routes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        RouterModule.forRoot(routes)
+        RouterModule.forRoot(routes),
+        FormsModule,
+        ReactiveFormsModule
     ],
     declarations: [
         BookApp,
