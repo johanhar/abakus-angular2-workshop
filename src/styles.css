@@ -91,7 +91,7 @@ tbody tr:hover {
     cursor: pointer;
 }
 
-.nav__link--active, .nav__link--active:hover {
+.nav__link.active, .nav__link.active:hover {
     color: #FF00FF;
 }
 

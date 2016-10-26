@@ -12,7 +12,7 @@ I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av
 - Angular sine Lifecycle Hooks
 
 ### Ferdig løsning
-LINK TIL FERDIG LØSNING ...
+[https://fathomless-sands-93928.herokuapp.com](https://fathomless-sands-93928.herokuapp.com)
 
 ## Før du begynner
 ### Sørg for at du har Git installert
@@ -453,7 +453,7 @@ Nå har vi fått på plass noen komponenter som vi kan rute til.
 Fortsett med neste oppgave, det er ikke mye nytt å se i [http://localhost:8080](http://localhost:8080) enda.
 
 ### 3.2 - Definer ruter til hver komponent
-**Editer /src/main.ts**
+**Editer /src/book-app/book-app.module.ts**
 ```javascript
 import { NgModule } from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
@@ -569,7 +569,7 @@ Det finnes et direktiv som heter [RouterLinkActive](https://angular.io/docs/ts/l
 ```
 💡 Tips
 
-Det finnes en ferdig CSS-klasse som heter "nav__link--active"
+Det finnes en ferdig CSS-klasse som heter "active"
 ```
 
 ## Oppgave 4 - Template bindings
@@ -667,7 +667,7 @@ export class Books {
 }
 ```
 
-Ta en titt under http://localhost:8080/#/books så har vi nå ganske enkelt laget en liste av bøker med `*ngFor`.
+Ta en titt under http://localhost:8080/books så har vi nå ganske enkelt laget en liste av bøker med `*ngFor`.
 
 ### 4.3 - En egen klasse for Bok
 Istedenfor å bruke et array av strings, så kan vi lage en klasse i TypeScript som representerer en bok.
@@ -691,7 +691,7 @@ Det stemmer ...
 Vi ønsker ikke at det skal være mulig å lage en bok uten å ha alle felter.
 Hvert argument i constructor vil automatisk bli en property til klassen, og hver property vil bli assigned.
 
-Mer eksplesitt kunne vi har skrevet:
+Mer eksplisitt kunne vi har skrevet:
 ```javascript
 //
 // Dette er bare et eksempel og ikke en del av koden som skal inn i prosjektet
@@ -1027,7 +1027,13 @@ Så når vi da krever et argument av typen `Router` i constructor til en kompone
 
 
 
-## Oppgave 7 - Licecycle Hooks
+### 6.4 - Bonusoppgave
+
+Det er ikke så vanlig å binde en metode til `(click)`som igjen kaller `this.router.navigate(['bookdetails', book.id]);`. Men for eksemplets skyld gjorde vi det denne gang - slik at vi kunne gi en innføring i DI og output.
+
+Se om du kan få til samme navigasjon med `[routerLink]` direktivet.
+
+## Oppgave 7 - Lifecycle Hooks
 
 Alle komponenter har en lifecycle som Angular håndterer for oss. Når vi har komponenter som får andre komponenter og services injected bør vi forholde oss til såkalte hooks. 
 
