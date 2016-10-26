@@ -898,6 +898,9 @@ export class Books {
 
 Ta en titt i nettleseren din, det bør nå fungere igjen.
 
+### 5.3 - Bonusoppgave
+Under tabben/fanen til `/about` så står det at vi har bare 2 bøker i biblioteket. Klarer du å vise samme antall som til en hver tid vises i tabellen under `/books`?
+
 ## Oppgave 6 - Output
 Nå har vi sett på input. Hvordan kan en komponent sende output til sin parent og fortelle om events og lignende?
 
@@ -1025,10 +1028,7 @@ Så når vi da krever et argument av typen `Router` i constructor til en kompone
                    
 ```
 
-
-
 ### 6.4 - Bonusoppgave
-
 Det er ikke så vanlig å binde en metode til `(click)`som igjen kaller `this.router.navigate(['bookdetails', book.id]);`. Men for eksemplets skyld gjorde vi det denne gang - slik at vi kunne gi en innføring i DI og output.
 
 Se om du kan få til samme navigasjon med `[routerLink]` direktivet.
@@ -1108,6 +1108,11 @@ setTimeout(() => {
 ```
 
 Angular trenger ikke å få beskjed om når `book` i controlleren har endret seg, templaten/viewet blir automatisk re-rendret!
+
+### 7.2 - Bonusoppgave
+Denne oppgaven er kun relevant hvis du gjorde bonusoppgave 3.5...
+
+Når du navigerer deg inn på en bok ( `/bookdetails` ) forsvinner CSS-klassen som gjør "Books" tabben aktiv. Klarer du markere "Books"-tabben som aktiv i navigasjonsbaren selv når vi er inne på `/bookdetails` ?
 
 ## Takk for deltakelse 👍
 Workshopen denne gang hadde litt begrenset med tid, håper du likevel fikk en god smakebit på hva Angular 2 og TypeScript har å tilby.

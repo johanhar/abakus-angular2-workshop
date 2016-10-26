@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BOOK_DATA } from '../books/books.data';
 
 @Component({
     'selector': 'about',
@@ -8,5 +9,5 @@ import { Component } from '@angular/core';
     `
 })
 export class About {
-    numberOfBooks: Number = 2;
+    numberOfBooks: Number = BOOK_DATA.length;
 }
