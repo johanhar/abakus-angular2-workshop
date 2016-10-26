@@ -2,8 +2,8 @@
   "name": "abakus-angular2-workshop",
   "version": "1.0.0",
   "engines": {
-    "npm": ">=2.14.0",
-    "node": ">=4.2.1"
+    "npm": "2.14.7",
+    "node": "4.2.1"
   },
   "description": "Angular 2 Workshop for Abakus",
   "scripts": {
