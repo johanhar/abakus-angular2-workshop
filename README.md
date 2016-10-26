@@ -5,11 +5,13 @@
 
 I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av bøker. Du kommer til å lære om:
 
-- bulletpoint
-- bulletpoint
-- bulletpoint
+- Component
+- Routing
+- Templating
+- Dependency Injection
+- Angular sine Lifecycle Hooks
 
-Vi fokuserer primært på Angular og TypeScript. Likevel er det mange andre ting som må være på plass for å få en moderne web-app til å fungere. Det er mange "buzzwords" (node, webpack, transpilering, sass, ++) å lære seg, men vi dekker ikke disse i denne workshopen. Hvis man likevel skulle være nysgjerrig kan man ta en titt på [vårt oppsett av Webpack](https://angular.io/docs/ts/latest/guide/webpack.html).
+Vi fokuserer primært på Angular og TypeScript. Likevel er det mange andre ting som må være på plass for å få en moderne web-app til å fungere. Det er mange "buzzwords" (node, webpack, transpilering, sass, ++) å lære seg, men vi dekker ikke alle disse i denne omgang. Hvis man likevel skulle være nysgjerrig og er ferdig med alle oppgavene før tiden kan man ta en titt på [vårt oppsett av Webpack](https://angular.io/docs/ts/latest/guide/webpack.html). 
 
 ### Ferdig løsning
 LINK TIL FERDIG LØSNING ...
@@ -175,7 +177,7 @@ Her legger vi inn rot-komponenten, top-level komponenten som vi skal "bootstrapp
 ### 1.4 Bootstrap appen
 Når vi setter opp en Angular applikasjon så må vi definere en fil hvor vi starter appen fra. Dette har vi allerede gjort for deg, så dette trenger du ikke å tenke på. Man kan se på det som Java sin main-metode, selve utgangspunktet for hvor appen starter å kjøre. Vi har valgt å starte appen fra `src/main.ts`. 
 
-Vi sier at vi bootstrapper appen. Når vi bootstrapper en app så gir vi Angular den modulen som inneholder vår rot-komponent, fra her vil Angular gå gjennom hele treet av komponenter og sørge for at våre nye komponenter kan brukes.
+Vi sier at vi bootstrapper appen. Når vi bootstrapper en app så gir vi Angular den modulen som inneholder vår rot-komponent og fra her vil Angular gå gjennom hele treet av komponenter og sette opp alt som er nødvendig for at appen kan kjøre.
 
 **Rediger /src/main.ts**
 ```javascript
@@ -188,8 +190,7 @@ if (process.env.ENV === 'production') {
 platformBrowserDynamic().bootstrapModule(BookAppModule);
 ```
 
-TODO:
-`platformBrowserDynamic` er en funksjon som gjør seg kjent med hvilken nettleser vi kjører appen i og vet hvordan appen vår app kan kjøre ... hmm kommer ikke på en god forklaring her
+`platformBrowserDynamic` er en funksjon som gjør seg kjent med hvilken nettleser som brukes og bootstrapper appen for den nettleseren.
 
 Nå kan vi ta i bruk `<book-app>` i vår `index.html`.
 
@@ -1105,13 +1106,8 @@ setTimeout(() => {
 Angular trenger ikke å få beskjed om når `book` i controlleren har endret seg, templaten/viewet blir automatisk re-rendret!
 
 ## Takk for deltakelse 👍
-Workshopen denne gang hadde litt begrenset med tid, vi rakk vi ikke å se nærmere på:
+Workshopen denne gang hadde litt begrenset med tid, håper du likevel fikk en god smakebit på hva Angular 2 og TypeScript har å tilby.
 
-- Skjema/forms med to-vei binding og validering
-- RxJS (streams og observables)
-- HTTP/Ajax
-- Mer DI (hvordan lage egne services, ++)
-
-Håper workshopen ga en god smakebit på hva Angular 2 og TypeScript har å tilby.
+Har du tid til overs er det bare å rekke opp en hånd, vi har noen bonusoppgaver på lur ;)
 
 Ønsker du å lære mer på egenhånd anbefaler vi [angular.io](http://angular.io) sine egne tutorials og spesielt denne boken [her](https://www.ng-book.com/2/).
