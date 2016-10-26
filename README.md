@@ -1154,7 +1154,7 @@ export class Contact {}
 
 Dette er utgangspunktet for skjemaet som vi skal bygge videre på. Ta en titt i nettleseren at alt ser greit ut så langt..
 
-### 8.1 - Opprett FormControls og en FormGroup
+### 8.2 - Opprett FormControls og en FormGroup
 **Editer filen: src/book-app/contact/contact.components.ts**
 ```javascript
 import { Component } from '@angular/core';
@@ -1208,7 +1208,7 @@ Dette er nødvendige avhengigheter vi kommer til å få når vi skal jobbe med f
 
 Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
 
-### 8.2 - Bind FormControls til elementer i templaten
+### 8.3 - Bind FormControls til elementer i templaten
 **Rediger deler av filen: src/book-app/contact/contact.components.ts**
 ```html
 <input type="text" 
@@ -1221,7 +1221,7 @@ Gjør det samme for epost- og meldingsfelt.
 
 Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
 
-### 8.3 - Bind FormGroup til formen i templaten
+### 8.4 - Bind FormGroup til formen i templaten
 **Rediger deler av filen: src/book-app/contact/contact.components.ts**
 ```html
 <form [formGroup]="contactForm" (ngSubmit)="onSubmit(contactForm.value)">
@@ -1229,6 +1229,7 @@ Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
 
 Her har vi også tatt i bruk det innebygde direktivet `(ngSubmit)`. Det fungerer på lik måte som `(click)`. Funksjonen vi binder til må vi også lage:
 
+**Rediger deler av filen: src/book-app/contact/contact.components.ts**
 ```javascript
 onSubmit(value: string): void {
 	console.log('you submitted value: ', value);
@@ -1237,7 +1238,7 @@ onSubmit(value: string): void {
 
 Nå er det endelig mulig å se endringer i nettleseren. Åpne consolen og sjekk om alle felter i skjemaet logges ved innsending.
 
-### 8.4 - Feedback ved innsending
+### 8.5 - Feedback ved innsending
 Det er kanskje litt kjedelig å bare logge til console, la oss gjøre appen litt mer "ekte" med å gi en tilbakemelding.
 
 **Rediger deler av filen: src/book-app/contact/contact.components.ts**
@@ -1275,7 +1276,7 @@ Du vil nå få opp en melding i nettleseren ved innsending av skjemaet.
 
 Som vi har snakket om før så vil `<p *ngIf="submitted">` sitt innhold vises/skjules når `submitted` endres. Angular tar seg av endringer i viewet, man trenger bare å endre `submitted` og så vil resten skje automatisk.
 
-### 8.5 - Slå av HTML5 validering
+### 8.6 - Slå av HTML5 validering
 Som du kan se har vi prøvd å merke navn og melding som obligatorisk med å bruke stjerne, 
 en typisk måte å si til brukeren at dette feltet må være med (`placeholder="Name *"`). Vi har også et felt for epost, som nå valideres av nettleseren din (HTML5).
 
@@ -1296,7 +1297,7 @@ Ofte ønsker vi kontrollen på feilmeldinger selv, så la oss starte med å slå
 
 Det er ikke så mye nytt å se i nettleseren enda, gå videre til neste oppgave.
 
-### 8.6 - Legg til feilmeldinger
+### 8.7 - Legg til feilmeldinger
 Det er mange måter å vise feilmeldinger på, vi gjør det enkelt (og ikke nødvendigvis best) med å vise alle type feil i toppen av skjema i en samlet `<div>`.
 
 **Rediger: /src/book-app/contact/contact.component.ts**
@@ -1310,7 +1311,7 @@ Det er mange måter å vise feilmeldinger på, vi gjør det enkelt (og ikke nød
 
 Det er ikke så mye nytt å se i nettleseren enda, gå videre til neste oppgave.
 
-### 8.7 - Legg på validering
+### 8.8 - Legg på validering
 ```javascript
     constructor(formBuilder: FormBuilder) {
         this.contactForm = formBuilder.group({
@@ -1327,7 +1328,7 @@ Husk å importere `Validators` fra '@angular/forms'.
 
 Nå kan du prøve å sende formen og se om valideringen fungerer!
 
-### 8.8 - Bonusoppgave
+### 8.9 - Bonusoppgave
 Se om du klarer å gjøre `<button type="submit">` disabled (grået ut og ikke klikkbar) når skjemaet ikke er gyldig.
 
 Hint: det finnes et `[disabled]` direktiv.
