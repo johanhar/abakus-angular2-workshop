@@ -25,7 +25,7 @@ I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av
 ### Lag en klone av repository
 Åpne en terminal og naviger til den stien der du ønsker å legge prosjektet. Kopier så inn følgende kommando: 
 ```
-git clone git@github.com:johanhar/abakus-angular2-workshop.git
+git clone https://github.com/johanhar/abakus-angular2-workshop.git
 ```
 
 ### Installer avhengigheter
