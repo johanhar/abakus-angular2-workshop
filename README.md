@@ -10,6 +10,7 @@ I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av
 - Templating
 - Dependency Injection
 - Angular sine Lifecycle Hooks
+- Skjema og validering
 
 ### Ferdig løsning
 [https://fathomless-sands-93928.herokuapp.com](https://fathomless-sands-93928.herokuapp.com)
