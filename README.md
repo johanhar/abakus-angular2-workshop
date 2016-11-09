@@ -570,7 +570,7 @@ Det finnes et direktiv som heter [RouterLinkActive](https://angular.io/docs/ts/l
 ```
 💡 Tips
 
-Det finnes en ferdig CSS-klasse som heter "active"
+Det finnes en ferdig CSS-klasse som heter "nav__link--active"
 ```
 
 ## Oppgave 4 - Template bindings
