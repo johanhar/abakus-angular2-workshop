@@ -10,9 +10,10 @@ I denne workshoppen skal vi lage en applikasjon for å håndtere et bibliotek av
 - Templating
 - Dependency Injection
 - Angular sine Lifecycle Hooks
+- Skjema og validering
 
 ### Ferdig løsning
-LINK TIL FERDIG LØSNING ...
+[https://fathomless-sands-93928.herokuapp.com](https://fathomless-sands-93928.herokuapp.com)
 
 ## Før du begynner
 ### Sørg for at du har Git installert
@@ -24,7 +25,7 @@ LINK TIL FERDIG LØSNING ...
 ### Lag en klone av repository
 Åpne en terminal og naviger til den stien der du ønsker å legge prosjektet. Kopier så inn følgende kommando: 
 ```
-git clone git@github.com:johanhar/abakus-angular2-workshop.git
+git clone https://github.com/johanhar/abakus-angular2-workshop.git
 ```
 
 ### Installer avhengigheter
@@ -453,7 +454,7 @@ Nå har vi fått på plass noen komponenter som vi kan rute til.
 Fortsett med neste oppgave, det er ikke mye nytt å se i [http://localhost:8080](http://localhost:8080) enda.
 
 ### 3.2 - Definer ruter til hver komponent
-**Editer /src/main.ts**
+**Editer /src/book-app/book-app.module.ts**
 ```javascript
 import { NgModule } from '@angular/core';
 import { BrowserModule }  from '@angular/platform-browser';
@@ -596,7 +597,7 @@ Koden du finner på innsiden av **{{...}}** er en expression, det betyr at man k
 ```
 
 ```javascript
-{{ myFunction(myArguments) }}
+{{ myFunction(myArguments) }}
 ```
 
 La oss teste dette med et enkelt eksempel i vår egen app..
@@ -667,7 +668,7 @@ export class Books {
 }
 ```
 
-Ta en titt under http://localhost:8080/#/books så har vi nå ganske enkelt laget en liste av bøker med `*ngFor`.
+Ta en titt under http://localhost:8080/books så har vi nå ganske enkelt laget en liste av bøker med `*ngFor`.
 
 ### 4.3 - En egen klasse for Bok
 Istedenfor å bruke et array av strings, så kan vi lage en klasse i TypeScript som representerer en bok.
@@ -691,7 +692,7 @@ Det stemmer ...
 Vi ønsker ikke at det skal være mulig å lage en bok uten å ha alle felter.
 Hvert argument i constructor vil automatisk bli en property til klassen, og hver property vil bli assigned.
 
-Mer eksplesitt kunne vi har skrevet:
+Mer eksplisitt kunne vi har skrevet:
 ```javascript
 //
 // Dette er bare et eksempel og ikke en del av koden som skal inn i prosjektet
@@ -871,7 +872,7 @@ Nå er BookRow en ganske enkel komponent, den tar en bok og viser dataen uten no
 **Rediger filen: /src/book-app/books/books.component**
 ```javascript
 import { Component } from '@angular/core';
-import { BOOK_DATA } from './books.data';
+import { BOOK_DATA } from './books.data';
 import { Book } from './book.model';
 
 @Component({
@@ -897,6 +898,9 @@ export class Books {
 ```
 
 Ta en titt i nettleseren din, det bør nå fungere igjen.
+
+### 5.3 - Bonusoppgave
+Under tabben/fanen til `/about` så står det at vi har bare 2 bøker i biblioteket. Klarer du å vise samme antall som til en hver tid vises i tabellen under `/books`?
 
 ## Oppgave 6 - Output
 Nå har vi sett på input. Hvordan kan en komponent sende output til sin parent og fortelle om events og lignende?
@@ -1025,9 +1029,12 @@ Så når vi da krever et argument av typen `Router` i constructor til en kompone
                    
 ```
 
+### 6.4 - Bonusoppgave
+Det er ikke så vanlig å binde en metode til `(click)`som igjen kaller `this.router.navigate(['bookdetails', book.id]);`. Men for eksemplets skyld gjorde vi det denne gang - slik at vi kunne gi en innføring i DI og output.
 
+Se om du kan få til samme navigasjon med `[routerLink]` direktivet.
 
-## Oppgave 7 - Licecycle Hooks
+## Oppgave 7 - Lifecycle Hooks
 
 Alle komponenter har en lifecycle som Angular håndterer for oss. Når vi har komponenter som får andre komponenter og services injected bør vi forholde oss til såkalte hooks. 
 
@@ -1056,8 +1063,8 @@ Det finnes flere hooks, men vi skal kun fokusere på `ngOnInit`.
 ```javascript
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Book } from './book.model';
-import { BOOK_DATA } from './books.data';
+import { Book } from './book.model';
+import { BOOK_DATA } from './books.data';
 
 @Component({
     'selector': 'book-details',
@@ -1097,13 +1104,237 @@ export class BookDetails implements OnInit {
 Hva skjer om vi legger inn et lite delay når vi henter riktig bok basert på id? La oss si at vi heller hentet data fra en server med mye delay...
 ```javascript
 setTimeout(() => {
-	this.book = filteredBooks[0];
+  this.book = filteredBooks[0];
 }, 3000);
 ```
 
 Angular trenger ikke å få beskjed om når `book` i controlleren har endret seg, templaten/viewet blir automatisk re-rendret!
 
+### 7.2 - Bonusoppgave
+Denne oppgaven er kun relevant hvis du gjorde bonusoppgave 3.5...
+
+Når du navigerer deg inn på en bok ( `/bookdetails` ) forsvinner CSS-klassen som gjør "Books" tabben aktiv. Klarer du markere "Books"-tabben som aktiv i navigasjonsbaren selv når vi er inne på `/bookdetails` ?
+
+Her er noen mulige hint (det finnes nok flere ulike løsninger, man må ikke løse det med følgende hint):
+
+- [NgClass](https://angular.io/docs/ts/latest/api/common/index/NgClass-directive.html)
+- [ActivatedRoute](https://angular.io/docs/ts/latest/api/router/index/ActivatedRoute-interface.html)
+
+## Oppgave 8 - Forms / skjema
+Det er kanskje ikke så mange som bruker fax i dag. La oss lage et kontaktskjema under `/contact` istedenfor å be om fax.
+
+Før vi setter i gang tar vi en kjapp runde på teori og gjør deg kjent med de komponenter vi skal bruke.
+
+#### FormControl
+En FormControl representerer et felt i et skjema. For eksempel `<input>` eller `<select>`.
+
+#### FormGroup
+En FormGroup er en samling av FormControls.
+
+Vi må altså opprette en `FormControl` i vår kontroller/klasse og binde denne opp et element i templaten - for alle elementer.
+
+### 8.1 - Lag et tomt skjema
+**Editer filen: src/book-app/contact/contact.component.ts**
+```javascript
+import { Component } from '@angular/core';
+
+@Component({
+    'selector': 'contact',
+    'template': `
+        <form>
+            <input type="text" name="name" placeholder="Name *">
+            <input type="email" name="email" placeholder="Email">
+            <textarea placeholder="Message *" name="message"></textarea>
+            <button type="submit">Contact us</button>
+        </form>
+    `
+})
+export class Contact {}
+```
+
+Dette er utgangspunktet for skjemaet som vi skal bygge videre på. Ta en titt i nettleseren at alt ser greit ut så langt..
+
+### 8.2 - Opprett FormControls og en FormGroup
+**Editer filen: src/book-app/contact/contact.component.ts**
+```javascript
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+
+@Component({
+    'selector': 'contact',
+    'template': `
+        <form>
+            <input type="text" name="name" placeholder="Name *">
+            <input type="email" name="email" placeholder="Email">
+            <textarea placeholder="Message *" name="message"></textarea>
+            <button type="submit">Contact us</button>
+        </form>
+    `
+})
+export class Contact {
+    contactForm: FormGroup;
+    nameControl: AbstractControl;
+    emailControl: AbstractControl;
+    messageControl: AbstractControl;
+
+    constructor(formBuilder: FormBuilder) {
+        this.contactForm = formBuilder.group({
+            'email': [''],
+            'name': [''],
+            'message': ['']
+        });
+        this.nameControl = this.contactForm.controls['name'];
+        this.emailControl = this.contactForm.controls['email'];
+        this.messageControl = this.contactForm.controls['message'];
+    }
+}
+```
+
+**Importer nye moduler: src/book-app/book-app.module.ts**
+```javascript
+import { FormsModule, ReactiveFormsModule
+} from '@angular/forms';
+
+@NgModule({
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(routes),
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    ...
+```
+Dette er nødvendige avhengigheter vi kommer til å få når vi skal jobbe med forms og validering.
+
+Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
+
+### 8.3 - Bind FormControls til elementer i templaten
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
+```html
+<input type="text" 
+       name="name" 
+       placeholder="Name *"
+       [formControl]="nameControl">
+```
+
+Gjør det samme for epost- og meldingsfelt.
+
+Ingenting nytt å se i nettleseren, gå videre til neste oppgave.
+
+### 8.4 - Bind FormGroup til formen i templaten
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
+```html
+<form [formGroup]="contactForm" (ngSubmit)="onSubmit(contactForm.value)">
+```
+
+Her har vi også tatt i bruk det innebygde direktivet `(ngSubmit)`. Det fungerer på lik måte som `(click)`. Funksjonen vi binder til må vi også lage:
+
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
+```javascript
+onSubmit(value: string): void {
+  console.log('you submitted value: ', value);
+}
+```
+
+Nå er det endelig mulig å se endringer i nettleseren. Åpne consolen og sjekk om alle felter i skjemaet logges ved innsending.
+
+### 8.5 - Feedback ved innsending
+Det er kanskje litt kjedelig å bare logge til console, la oss gjøre appen litt mer "ekte" med å gi en tilbakemelding.
+
+**Rediger deler av filen: src/book-app/contact/contact.component.ts**
+```javascript
+//
+// Dette er ikke hele filen
+// Bare det som du skal legge inn ekstra på riktige steder
+// Du skal ikke fjerne/erstatte eksisterende kode
+//
+
+// Legg til en melding i templaten
+@Component({
+    'template': `
+        <p class="center" *ngIf="submitted">Thank you for contacting us!</p>
+    `
+})
+
+export class Contact {
+  // Legg til en ny property (brukes av *ngIf)
+    submitted: boolean = false;
+    
+    onSubmit(value: string): void {
+        console.log('you submitted value: ', value);
+        this.contactForm.reset();
+        this.submitted = true;
+
+        setTimeout(() => {
+            this.submitted = false;
+        }, 2000);
+    }
+}
+```
+
+Du vil nå få opp en melding i nettleseren ved innsending av skjemaet.
+
+Som vi har snakket om før så vil `<p *ngIf="submitted">` sitt innhold vises/skjules når `submitted` endres. Angular tar seg av endringer i viewet, man trenger bare å endre `submitted` og så vil resten skje automatisk.
+
+### 8.6 - Slå av HTML5 validering
+Som du kan se har vi prøvd å merke navn og melding som obligatorisk med å bruke stjerne, 
+en typisk måte å si til brukeren at dette feltet må være med (`placeholder="Name *"`). Vi har også et felt for epost, som nå valideres av nettleseren din (HTML5).
+
+Ofte ønsker vi kontrollen på feilmeldinger selv, så la oss starte med å slå av HTML5 validering.
+
+**Rediger: /src/book-app/contact/contact.component.ts**
+```html
+<form [formGroup]="contactForm" 
+    (ngSubmit)="onSubmit(contactForm.value)" 
+    novalidate>
+
+<input type="email" 
+    name="email" 
+    placeholder="Email"
+    [formControl]="emailControl" 
+    novalidate>
+```
+
+Det er ikke så mye nytt å se i nettleseren enda, gå videre til neste oppgave.
+
+### 8.7 - Legg til feilmeldinger
+Det er mange måter å vise feilmeldinger på, vi gjør det enkelt (og ikke nødvendigvis best) med å vise alle type feil i toppen av skjema i en samlet `<div>`.
+
+**Rediger: /src/book-app/contact/contact.component.ts**
+```html
+<div class="center">
+  <p *ngIf="!nameControl.valid && nameControl.touched">Name is required</p>
+  <p *ngIf="!emailControl.valid && emailControl.touched">Email is invalid</p>
+  <p *ngIf="!messageControl.valid && messageControl.touched">Message is required</p>
+</div>
+```
+
+Det er ikke så mye nytt å se i nettleseren enda, gå videre til neste oppgave.
+
+### 8.8 - Legg på validering
+```javascript
+    constructor(formBuilder: FormBuilder) {
+        this.contactForm = formBuilder.group({
+            'email': ['', Validators.pattern('^[^ ]+@[^ ]+\\.[^ ]+$')],
+            'name': ['', Validators.required],
+            'message': ['', Validators.required]
+        });
+        this.nameControl = this.contactForm.controls['name'];
+        this.emailControl = this.contactForm.controls['email'];
+        this.messageControl = this.contactForm.controls['message'];
+    }
+```
+Husk å importere `Validators` fra '@angular/forms'.
+
+Nå kan du prøve å sende formen og se om valideringen fungerer!
+
+### 8.9 - Bonusoppgave
+Se om du klarer å gjøre `<button type="submit">` disabled (grået ut og ikke klikkbar) når skjemaet ikke er gyldig.
+
+Hint: det finnes et `[disabled]` direktiv.
+
 ## Takk for deltakelse 👍
+
 Workshopen denne gang hadde litt begrenset med tid, håper du likevel fikk en god smakebit på hva Angular 2 og TypeScript har å tilby.
 
 Har du tid til overs er det bare å rekke opp en hånd, vi har noen bonusoppgaver på lur ;)
